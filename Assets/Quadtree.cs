@@ -232,6 +232,8 @@ public class Quadtree<T>
                 }
                 if (occupied) { break; }
             }
+            if (position.x - rect.xMin < radius || rect.xMax - position.x < radius || position.y - rect.yMin < radius || rect.yMax - position.y < radius) 
+                occupied = true;
             if (occupied) { amountSkipped++; continue; }
             for (int x = minX; x <= maxX; x++)
             {
@@ -384,7 +386,7 @@ public struct Star
     public ulong seed;
     public Color color;
     public int index;
-
+    public string name;
     public Star(int starIndex, Vector2 pos, float r, Color starColor, ulong seed64)
     {
         index = starIndex;
@@ -392,6 +394,7 @@ public struct Star
         radius = r;
         color = starColor;
         seed = seed64;
+        name = null;
     }
 }
 

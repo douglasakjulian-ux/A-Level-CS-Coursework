@@ -25,6 +25,28 @@ public class GalaxyVisualiser : MonoBehaviour
 
     InputActions inputActions;
 
+    string[] alphabet = new string[]
+    {
+        "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"
+    };
+    string[] consonants = new string[]
+    {
+        "b","c","d","f","g","h","j","k","l","m","n","p","q","r","s","t","v","w","x","y","z",
+        "br","cr","dr","fr","gr","pr","tr",
+        "bl","cl","fl","gl","pl","sl",
+        "ch","sh","th",
+        "sc","sk","sm","sn","sp","st","sw"
+    };
+    string[] vowels = new string[]
+    {
+        "a","e","i","o","u",
+        "ae","ai","ao","au",
+        "ea","ei","eu",
+        "ia","io","iu",
+        "oa","oi","ou",
+        "ua","ui","uo"
+    };
+
     private void Start()
     {
         inputActions = new InputActions();
@@ -109,10 +131,10 @@ public class GalaxyVisualiser : MonoBehaviour
     Quadtree<string> preRoot = null;
     private void Update()
     {
+        //finding nearest star to clicked position
         if (inputActions.Player.LMB.triggered)
         {
             Vector2 mousePos = cam.ScreenToWorldPoint(inputActions.Player.MousePos.ReadValue<Vector2>());
-            //mousePos = cam.GetComponent<CameraTestScript>().GetMouseWorldPosition(mousePos);
             float bestDist = float.MaxValue;
             Star bestStar = default;
             Quadtree<string> bestRoot = null;
@@ -139,12 +161,32 @@ public class GalaxyVisualiser : MonoBehaviour
                 preCols[preIndex + 3] = preStar.color;
                 preRoot.starMesh.SetColors(preCols);
             }
-            int i = bestStar.index * 4;
+            string seedStr = bestStar.seed.ToString();
+            string name = null;
+            name += alphabet[int.Parse(seedStr[1].ToString()) % alphabet.Length];
+            int nameLength = (int)(Mathf.Abs(hash((int)bestStar.seed, bestStar.index, 5)) + 3);
+            for (int i = 0; i < nameLength; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    name += vowels[int.Parse(seedStr[i].ToString()) % vowels.Length];
+                }
+                else
+                {
+                    name += consonants[int.Parse(seedStr[i].ToString()) % consonants.Length];
+                }
+            }
+            name += "-" + seedStr.Substring(0, 3);
+            bestStar.name = name;
+            Debug.Log(name);
+
+            //highlighting closest star
+            int index = bestStar.index * 4;
             Color[] cols = bestRoot.starMesh.colors;
-            cols[i] = Color.red;
-            cols[i+1] = Color.red;
-            cols[i+2] = Color.red;
-            cols[i+3] = Color.red;
+            cols[index] = Color.red;
+            cols[index+1] = Color.red;
+            cols[index+2] = Color.red;
+            cols[index+3] = Color.red;
             bestRoot.starMesh.SetColors(cols);
 
             Destroy(highlight);
@@ -157,7 +199,7 @@ public class GalaxyVisualiser : MonoBehaviour
             highlight.transform.localScale = new Vector2((bestStar.radius * 2f) + 0.25f, (bestStar.radius * 2f) + 0.25f);
 
             Debug.Log(bestStar.seed);
-            preIndex = i;
+            preIndex = index;
             preStar = bestStar;
             preRoot = bestRoot;
         }
