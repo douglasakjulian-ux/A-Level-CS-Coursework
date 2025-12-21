@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "InputActions",
     "maps": [
         {
@@ -45,6 +46,15 @@
                     "name": "LMB",
                     "type": "Button",
                     "id": "8382961e-318f-4fee-a7fc-3566015eb719",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Esc",
+                    "type": "Button",
+                    "id": "03e2d7ac-77cb-4c84-a545-657f87211dbd",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -148,6 +158,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "LMB",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b3802d76-d496-4446-b2af-38d9bf096b28",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Esc",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

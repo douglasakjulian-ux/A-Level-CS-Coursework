@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 
 public class ShipMovement : MonoBehaviour
@@ -22,6 +24,11 @@ public class ShipMovement : MonoBehaviour
 
     void Update()
     {
+        if (inputActions.Player.Esc.triggered)
+        {
+            StartCoroutine(GalaxyView());
+        }
+
         Vector2 move = inputActions.Player.Move.ReadValue<Vector2>();
         velocity += transform.up * (move.y * thrust * Time.deltaTime);
         velocity = Vector3.ClampMagnitude(velocity, maxVelocity);
@@ -33,5 +40,39 @@ public class ShipMovement : MonoBehaviour
         transform.position += velocity * Time.deltaTime;
 
         camObj.transform.position = new Vector3(transform.position.x, transform.position.y, -10f);
+    }
+
+    IEnumerator GalaxyView()
+    {
+        if (!SceneManager.GetSceneByName("Galaxy").isLoaded)
+        {
+            AsyncOperation loadOp = SceneManager.LoadSceneAsync("Galaxy", LoadSceneMode.Additive);
+
+            while (!loadOp.isDone)
+                yield return null;
+        }
+
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("Galaxy"));
+
+        foreach (GameObject root in SceneManager.GetActiveScene().GetRootGameObjects())
+        {
+            root.SetActive(true);
+        }
+
+        Scene scene = SceneManager.GetSceneByName("SolarSystem");
+        if (!scene.isLoaded) yield break;
+
+        foreach (GameObject root in scene.GetRootGameObjects())
+        {
+            root.SetActive(false);
+        }
+
+        Camera galaxyCam = null;
+        foreach (GameObject root in scene.GetRootGameObjects())
+        {
+            galaxyCam = root.GetComponentInChildren<Camera>();
+            if (galaxyCam != null) break;
+        }
+        galaxyCam.transform.position = GameObject.FindWithTag("Galaxy").GetComponent<GalaxyVisualiser>().bestStar.position;
     }
 }

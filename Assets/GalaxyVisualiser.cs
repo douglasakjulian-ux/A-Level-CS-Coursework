@@ -133,7 +133,7 @@ public class GalaxyVisualiser : MonoBehaviour
     int preIndex;
     Star preStar;
     Quadtree<string> preRoot = null;
-    Star bestStar = default;
+    public Star bestStar = default;
     private void Update()
     {
         //finding nearest star to clicked position
@@ -319,8 +319,14 @@ public class GalaxyVisualiser : MonoBehaviour
 
     IEnumerator LoadSolarSystem()
     {
-        AsyncOperation loadOp = SceneManager.LoadSceneAsync("SolarSystem", LoadSceneMode.Additive);
+        if (SceneManager.GetSceneByName("SolarSystem").isLoaded)
+        {
+            AsyncOperation unloadOp = SceneManager.UnloadSceneAsync("SolarSystem");
+            while (!unloadOp.isDone)
+                yield return null;
+        }
 
+        AsyncOperation loadOp = SceneManager.LoadSceneAsync("SolarSystem", LoadSceneMode.Additive);
         while (!loadOp.isDone)
             yield return null;
 
