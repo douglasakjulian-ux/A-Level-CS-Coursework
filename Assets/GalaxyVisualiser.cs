@@ -1,8 +1,12 @@
 using System.Collections.Generic;
+using System.Collections;
 using Unity.VisualScripting;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshRenderer))] [RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(MeshRenderer))]
+[RequireComponent(typeof(MeshFilter))]
 public class GalaxyVisualiser : MonoBehaviour
 {
     //public int depth; // for inserting quadTree
@@ -60,7 +64,7 @@ public class GalaxyVisualiser : MonoBehaviour
         DensityCalculator.seed = seed;
         DensityCalculator.size = size;
         DensityCalculator.rotation = rotation;
-        Rect originRect = new Rect(-(size/2f) + gameObject.transform.position.x, -(size/2f) + gameObject.transform.position.y, size, size);
+        Rect originRect = new Rect(-(size / 2f) + gameObject.transform.position.x, -(size / 2f) + gameObject.transform.position.y, size, size);
         galaxytree = new Quadtree<string>(originRect, 4, 0, initialDepth, false);
         quadtree = new Quadtree<string>(originRect, 4, 0, depth, true);
         //quadtree.density = 225000000f;
@@ -129,14 +133,17 @@ public class GalaxyVisualiser : MonoBehaviour
     int preIndex;
     Star preStar;
     Quadtree<string> preRoot = null;
+    Star bestStar = default;
     private void Update()
     {
         //finding nearest star to clicked position
         if (inputActions.Player.LMB.triggered)
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+                return;
             Vector2 mousePos = cam.ScreenToWorldPoint(inputActions.Player.MousePos.ReadValue<Vector2>());
             float bestDist = float.MaxValue;
-            Star bestStar = default;
+            bestStar = default;
             Quadtree<string> bestRoot = null;
             foreach (var root in rootTrees)
             {
@@ -180,13 +187,16 @@ public class GalaxyVisualiser : MonoBehaviour
             bestStar.name = name;
             Debug.Log(name);
 
+            bestStar.Clicked();
+            preStar.Unclicked();
+
             //highlighting closest star
             int index = bestStar.index * 4;
             Color[] cols = bestRoot.starMesh.colors;
             cols[index] = Color.red;
-            cols[index+1] = Color.red;
-            cols[index+2] = Color.red;
-            cols[index+3] = Color.red;
+            cols[index + 1] = Color.red;
+            cols[index + 2] = Color.red;
+            cols[index + 3] = Color.red;
             bestRoot.starMesh.SetColors(cols);
 
             Destroy(highlight);
@@ -239,7 +249,7 @@ public class GalaxyVisualiser : MonoBehaviour
             //float t = 1 - (density / 5000f);
             float t = density / 500000f;
             Color color = Color.Lerp(new Color(0.1f, 0.2f, 1f), new Color(0.8f, 0.9f, 1f), t);
-            color.a = Mathf.Lerp(0f, 1f, t*t);
+            color.a = Mathf.Lerp(0f, 1f, t * t);
             //Debug.Log($"Rect {rect.center} density={density} alpha={t}");
             //color.a = 0.5f;
 
@@ -298,6 +308,35 @@ public class GalaxyVisualiser : MonoBehaviour
         uint unsigned = (uint)raw;
         //return (float)unsigned / uint.MaxValue * mod;
         return (float)unsigned % mod;
+    }
+
+    public void OnButtonClick()
+    {
+        if (bestStar.seed == default) { return; }
+
+        StartCoroutine(LoadSolarSystem());
+    }
+
+    IEnumerator LoadSolarSystem()
+    {
+        AsyncOperation loadOp = SceneManager.LoadSceneAsync("SolarSystem", LoadSceneMode.Additive);
+
+        while (!loadOp.isDone)
+            yield return null;
+
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("SolarSystem"));
+
+        GameObject sceneMan = GameObject.FindWithTag("SceneManager");
+        sceneMan.GetComponent<MapGeneration>().seed = bestStar.seed;
+        sceneMan.GetComponent<MapGeneration>().CreateSystem();
+
+        Scene scene = SceneManager.GetSceneByName("Galaxy");
+        if (!scene.isLoaded) yield break;
+
+        foreach (GameObject root in scene.GetRootGameObjects())
+        {
+            root.SetActive(false);
+        }
     }
 }
 

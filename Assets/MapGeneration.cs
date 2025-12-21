@@ -34,7 +34,7 @@ public class MapGeneration : MonoBehaviour
     //    }
     //}
 
-    void Start()
+    public void CreateSystem()
     {
         //prevents division by 0
         if (seed == 0)

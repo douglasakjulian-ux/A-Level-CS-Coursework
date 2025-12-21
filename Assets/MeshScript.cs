@@ -87,7 +87,7 @@ public class MeshScript : MonoBehaviour
                 material.SetColor("_FrontColor", new Color32((byte)(hash(seed, (int)textureSeed*2, 255)), (byte)(hash(seed, (int)textureSeed*2 + 1, 255)), (byte)(hash(seed, (int)textureSeed*2 + 2, 255)), 255));
                 material.SetFloat("_Speed", hash(seed, (int)textureSeed, 1000) / 1000f * 0.4f);
                 material.SetFloat("_xScale", hash(seed, (int)textureSeed, 1000) / 1000f * 0.5f);
-                material.SetFloat("_Scale", hash(seed, (int)textureSeed, 1000) / 1000f * 25f);
+                material.SetFloat("_Scale", (hash(seed, (int)textureSeed, 1000) / 1000f * 20f) + 5f);
                 material.SetFloat("_Range", hash(seed, (int)textureSeed, 1000) / 1000f * 1.4f);
                 meshRenderer.material = material;
                 break;

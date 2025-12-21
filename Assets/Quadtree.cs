@@ -4,6 +4,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 
 public class Quadtree<T>
@@ -395,6 +396,16 @@ public struct Star
         color = starColor;
         seed = seed64;
         name = null;
+    }
+
+    public void Clicked()
+    {
+        Debug.Log($"Clicked: {name}, {position}");
+    }
+
+    public void Unclicked()
+    {
+        Debug.Log($"Unclicked: {name}, {position}");
     }
 }
 
