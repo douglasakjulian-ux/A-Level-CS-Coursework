@@ -488,7 +488,7 @@ GameObject:
   - component: {fileID: 684737132}
   m_Layer: 5
   m_Name: SelectionUI
-  m_TagString: Untagged
+  m_TagString: Selection
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -23,6 +23,7 @@ public class GalaxyVisualiser : MonoBehaviour
     GameObject camObj;
     Camera cam;
     GameObject point;
+    GameObject selection;
     Vector2 camObjGridPos = Vector2.zero;
 
     Quadtree<string>[] rootTrees;
@@ -75,6 +76,9 @@ public class GalaxyVisualiser : MonoBehaviour
         filter.mesh = mesh;
         var renderer = GetComponent<MeshRenderer>();
         renderer.material = galaxyMat;
+
+        selection = GameObject.FindWithTag("Selection");
+        selection.SetActive(false);
     }
 
     private void FixedUpdate()
@@ -139,6 +143,8 @@ public class GalaxyVisualiser : MonoBehaviour
         //finding nearest star to clicked position
         if (inputActions.Player.LMB.triggered)
         {
+            if (!selection.activeSelf)
+                selection.SetActive(true);
             if (EventSystem.current.IsPointerOverGameObject())
                 return;
             Vector2 mousePos = cam.ScreenToWorldPoint(inputActions.Player.MousePos.ReadValue<Vector2>());
