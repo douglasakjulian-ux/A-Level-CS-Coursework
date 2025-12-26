@@ -10,7 +10,7 @@ public class MeshScript : MonoBehaviour
 {
     public int seed;
 
-    public int resolution;
+    int resolution;
     public float diameter;
     public float amplitude;
     public float speed;
@@ -37,10 +37,17 @@ public class MeshScript : MonoBehaviour
 
     private void Awake()
     {
+        resolution = SystemSettings.resolution;
+
         meshFilter = GetComponent<MeshFilter>();
         texture = new Texture2D(resolution, resolution);
         meshRenderer = GetComponent<MeshRenderer>();
         generated = false;
+
+        if (bodyType == BodyType.Star || bodyType == BodyType.GasGiant)
+            noise = true;
+        else
+            noise = false;
     }
 
     public enum BiomeType

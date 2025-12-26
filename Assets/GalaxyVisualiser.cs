@@ -220,8 +220,9 @@ public class GalaxyVisualiser : MonoBehaviour
             if (!selection.activeSelf)
                 selection.SetActive(true);
 
-            SystemView.seed = bestStar.seed;
-            SystemView.DisplaySystem();
+            SystemView systemView = GameObject.FindWithTag("SystemView").GetComponent<SystemView>();
+            systemView.seed = bestStar.seed;
+            systemView.DisplaySystem();
         }
 
         foreach (var root in rootTrees)
