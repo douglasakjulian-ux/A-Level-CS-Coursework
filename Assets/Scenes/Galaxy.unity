@@ -766,9 +766,10 @@ GameObject:
   - component: {fileID: 1288402789}
   - component: {fileID: 1288402791}
   - component: {fileID: 1288402792}
+  - component: {fileID: 1288402793}
   m_Layer: 5
   m_Name: SystemView
-  m_TagString: Untagged
+  m_TagString: SystemView
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -827,6 +828,20 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!114 &1288402793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1288402788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4649a7e7acc542544a89ca18be2ad734, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SystemView
+  seed: 0
+  cameraObj: {fileID: 584908012}
 --- !u!1 &1373105353
 GameObject:
   m_ObjectHideFlags: 0
