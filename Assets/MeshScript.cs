@@ -82,7 +82,7 @@ public class MeshScript : MonoBehaviour
             case BodyType.GasGiant:
                 shader = Resources.Load<Shader>("Shaders/GasGiant");
                 material = new Material(shader);
-                textureSeed = hash(seed, order + 1, 10000);
+                //textureSeed = hash(seed, order + 1, 10000);
                 material.SetColor("_BackColor", new Color32((byte)(hash(seed, (int)textureSeed, 255)), (byte)(hash(seed, (int)textureSeed + 1, 255)), (byte)(hash(seed, (int)textureSeed + 2, 255)), 255));
                 material.SetColor("_FrontColor", new Color32((byte)(hash(seed, (int)textureSeed*2, 255)), (byte)(hash(seed, (int)textureSeed*2 + 1, 255)), (byte)(hash(seed, (int)textureSeed*2 + 2, 255)), 255));
                 material.SetFloat("_Speed", hash(seed, (int)textureSeed, 1000) / 1000f * 0.4f);
@@ -103,7 +103,7 @@ public class MeshScript : MonoBehaviour
                     case BiomeType.EarthLike:
                         shader = Resources.Load<Shader>("Shaders/PlanetShader");
                         material = new Material(shader);
-                        textureSeed = hash(seed, order + 1, 10000);
+                        //textureSeed = hash(seed, order + 1, 10000);
                         color1 = new Color32((byte)(hash(seed, (int)textureSeed, 255)), (byte)(hash(seed, (int)textureSeed + 1, 255)), (byte)(hash(seed, (int)textureSeed + 2, 255)), 255);
                         color2 = new Color32((byte)(hash(seed, (int)textureSeed + 3, 255)), (byte)(hash(seed, (int)textureSeed + 4, 255)), (byte)(hash(seed, (int)textureSeed + 5, 255)), 255);
                         color3 = new Color32((byte)(hash(seed, (int)textureSeed + 6, 255)), (byte)(hash(seed, (int)textureSeed + 7, 255)), (byte)(hash(seed, (int)textureSeed + 8, 255)), 255);

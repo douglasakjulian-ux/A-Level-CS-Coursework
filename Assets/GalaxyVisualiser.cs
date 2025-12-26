@@ -140,11 +140,9 @@ public class GalaxyVisualiser : MonoBehaviour
     public Star bestStar = default;
     private void Update()
     {
-        //finding nearest star to clicked position
+        //finding nearest star to clicked position //selection
         if (inputActions.Player.LMB.triggered)
         {
-            if (!selection.activeSelf)
-                selection.SetActive(true);
             if (EventSystem.current.IsPointerOverGameObject())
                 return;
             Vector2 mousePos = cam.ScreenToWorldPoint(inputActions.Player.MousePos.ReadValue<Vector2>());
@@ -167,11 +165,11 @@ public class GalaxyVisualiser : MonoBehaviour
             if (preRoot != null)
             {
                 preIndex = preStar.index * 4;
-                Color[] preCols = preRoot.starMesh.colors;
-                preCols[preIndex] = preStar.color;
-                preCols[preIndex + 1] = preStar.color;
-                preCols[preIndex + 2] = preStar.color;
-                preCols[preIndex + 3] = preStar.color;
+                Color[] preCols = preRoot.starMesh.colors; //temp color
+                preCols[preIndex] = Color.white;
+                preCols[preIndex + 1] = Color.white;
+                preCols[preIndex + 2] = Color.white;
+                preCols[preIndex + 3] = Color.white;
                 preRoot.starMesh.SetColors(preCols);
             }
             string seedStr = bestStar.seed.ToString();
@@ -218,6 +216,12 @@ public class GalaxyVisualiser : MonoBehaviour
             preIndex = index;
             preStar = bestStar;
             preRoot = bestRoot;
+
+            if (!selection.activeSelf)
+                selection.SetActive(true);
+
+            SystemView.seed = bestStar.seed;
+            SystemView.DisplaySystem();
         }
 
         foreach (var root in rootTrees)
