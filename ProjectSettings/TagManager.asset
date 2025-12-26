@@ -8,6 +8,7 @@ TagManager:
   - Galaxy
   - Selection
   - SystemView
+  - SystemInfo
   layers:
   - Default
   - TransparentFX

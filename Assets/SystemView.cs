@@ -1,5 +1,7 @@
+using System.Collections;
 using System.ComponentModel;
 using Unity.VisualScripting;
+using TMPro;
 using UnityEngine;
 
 public class SystemView : MonoBehaviour
@@ -8,11 +10,17 @@ public class SystemView : MonoBehaviour
     GameObject systemRoot;
     public GameObject cameraObj;
 
+    void Awake()
+    {
+        systemRoot = Instantiate(new GameObject("SystemRoot"));
+    }
+
     public void ClearSystem()
     {
-        if (systemRoot != null)
-            Destroy(systemRoot);
-        systemRoot = Instantiate(new GameObject("SystemRoot"));
+        foreach (Transform child in systemRoot.transform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 
     public void DisplaySystem()
@@ -21,6 +29,12 @@ public class SystemView : MonoBehaviour
         GameObject mesh = SystemSettings.mesh;
 
         SystemData system = SystemGenerator.Generate(seed);
+
+        int nBodies = 0;
+        int nPlanets = 0;
+        int nGasGiants = 0;
+        int nStars = 0;
+
         float min = 0f;
         float max = 0f;
         foreach (var body in system.Bodies)
@@ -45,7 +59,27 @@ public class SystemView : MonoBehaviour
 
             meshScript.bodyType = body.type;
             meshScript.Generate();
+
+            switch (body.type)
+            {
+                case MeshScript.BodyType.Star:
+                    nStars++;
+                    break;
+                case MeshScript.BodyType.Planet:
+                    nPlanets++;
+                    break;
+                case MeshScript.BodyType.GasGiant:
+                    nGasGiants++;
+                    break;
+            }
+            if (body.type != MeshScript.BodyType.Moon)
+                nBodies++;
         }
         cameraObj.GetComponent<Camera>().orthographicSize = Mathf.Max(Mathf.Abs(min), Mathf.Abs(max)) * 1.1f;
+
+        GameObject systemInfo = GameObject.FindWithTag("SystemInfo");
+        TMP_Text infoText = systemInfo.GetComponent<TMP_Text>();
+        infoText.richText = true;
+        infoText.text = $"<size=60><b>{GameObject.FindWithTag("Galaxy").GetComponent<GalaxyVisualiser>().name}</b></size>\n<size=30>Bodies: {nBodies.ToString()}\nStars: {nStars.ToString()}\nGas giants: {nGasGiants.ToString()}\nPlanets: {nPlanets.ToString()}\n \nSeed: {system.seed}</size>";
     }
 }

@@ -184,7 +184,7 @@ public class SystemData
             {
                 int diameter = (int)((hash(seed, i) * 500f) + 100);
                 BodyData bodyData = new BodyData();
-                bodyData.type = BodyType.Planet;
+                bodyData.type = BodyType.GasGiant;
                 bodyData.position = placement;
                 bodyData.diameter = diameter;
                 bodyData.order = i;

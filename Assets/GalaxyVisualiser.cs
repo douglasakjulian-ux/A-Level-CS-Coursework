@@ -30,6 +30,7 @@ public class GalaxyVisualiser : MonoBehaviour
 
     InputActions inputActions;
 
+    public string name;
     string[] alphabet = new string[]
     {
         "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"
@@ -173,7 +174,7 @@ public class GalaxyVisualiser : MonoBehaviour
                 preRoot.starMesh.SetColors(preCols);
             }
             string seedStr = bestStar.seed.ToString();
-            string name = null;
+            name = null;
             name += alphabet[int.Parse(seedStr[1].ToString()) % alphabet.Length];
             int nameLength = (int)(Mathf.Abs(hash((int)bestStar.seed, bestStar.index, 5)) + 3);
             for (int i = 0; i < nameLength; i++)

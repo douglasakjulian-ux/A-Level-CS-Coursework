@@ -156,6 +156,7 @@ MonoBehaviour:
   galaxyMat: {fileID: 2100000, guid: 816216e1c3aece9498845820209e34a7, type: 2}
   depth: 10
   rotation: 45
+  name: 
 --- !u!4 &485935488
 Transform:
   m_ObjectHideFlags: 0
@@ -1265,7 +1266,7 @@ GameObject:
   - component: {fileID: 1901296691}
   m_Layer: 5
   m_Name: Text (TMP)
-  m_TagString: Untagged
+  m_TagString: SystemInfo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
