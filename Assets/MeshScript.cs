@@ -33,6 +33,8 @@ public class MeshScript : MonoBehaviour
     bool generated;
     public Texture2D gradientTex;
 
+    public bool shadowBehind;
+
     public int order;
 
     private void Awake()
@@ -96,6 +98,8 @@ public class MeshScript : MonoBehaviour
                 material.SetFloat("_xScale", hash(seed, (int)textureSeed, 1000) / 1000f * 0.5f);
                 material.SetFloat("_Scale", (hash(seed, (int)textureSeed, 1000) / 1000f * 20f) + 5f);
                 material.SetFloat("_Range", hash(seed, (int)textureSeed, 1000) / 1000f * 1.4f);
+                material.SetInt("_ShadowBehind", shadowBehind ? 1 : 0);
+                material.SetFloat("_ShadowIntensity", shadowBehind ? (hash(seed, (int)textureSeed, 1000)/ 1000f * 0.5f) + 1f : (hash(seed, (int)textureSeed, 1000) / 1000f * 0.5f) + .25f);
                 meshRenderer.material = material;
                 break;
             case BodyType.Planet:
@@ -121,6 +125,8 @@ public class MeshScript : MonoBehaviour
                         material.SetFloat("_airScale", hash(seed, (int)textureSeed, 1000) / 1000f * 25f);
                         material.SetFloat("_airSpeed", hash(seed, (int)textureSeed, 1000) / 1000f * 0.2f);
                         material.SetVector("_heightSeed", new Vector2(hash(seed, (int)textureSeed, 10000), hash(seed, (int)textureSeed, 10000)));
+                        material.SetInt("_ShadowBehind", shadowBehind ? 1 : 0);
+                        material.SetFloat("_ShadowIntensity", shadowBehind ? (hash(seed, (int)textureSeed, 1000) / 1000f * 0.5f) + 1f : (hash(seed, (int)textureSeed, 1000) / 1000f * 0.5f) + .25f);
                         meshRenderer.material = material;
                         break;
                     case BiomeType.Rock:
@@ -132,6 +138,8 @@ public class MeshScript : MonoBehaviour
                         material.SetTexture("_GradientTexture", gradientTex);
                         material.SetFloat("_heightScale", (hash(seed, (int)textureSeed, 1000) / 1000f * 30f) + 10);
                         material.SetVector("_heightSeed", new Vector2(hash(seed, (int)textureSeed, 10000), hash(seed, (int)textureSeed, 10000)));
+                        material.SetInt("_ShadowBehind", shadowBehind ? 1 : 0);
+                        material.SetFloat("_ShadowIntensity", shadowBehind ? (hash(seed, (int)textureSeed, 1000) / 1000f * 0.5f) + 1f : (hash(seed, (int)textureSeed, 1000) / 1000f * 0.5f) + .25f);
                         meshRenderer.material = material;
                         break;
                     case BiomeType.Desert:
@@ -143,6 +151,8 @@ public class MeshScript : MonoBehaviour
                         material.SetTexture("_GradientTexture", gradientTex);
                         material.SetFloat("_heightScale", (hash(seed, (int)textureSeed, 1000) / 1000f * 15f) + 10);
                         material.SetVector("_heightSeed", new Vector2(hash(seed, (int)textureSeed, 10000), hash(seed, (int)textureSeed, 10000)));
+                        material.SetInt("_ShadowBehind", shadowBehind ? 1 : 0);
+                        material.SetFloat("_ShadowIntensity", shadowBehind ? (hash(seed, (int)textureSeed, 1000) / 1000f * 0.5f) + 1f : (hash(seed, (int)textureSeed, 1000) / 1000f * 0.5f) + .25f);
                         meshRenderer.material = material;
                         break;
                     case BiomeType.Volcano:
@@ -159,6 +169,8 @@ public class MeshScript : MonoBehaviour
                         material.SetFloat("_airScale", hash(seed, (int)textureSeed, 1000) / 1000f * 25f);
                         material.SetFloat("_airSpeed", hash(seed, (int)textureSeed, 1000) / 1000f * 0.1f);
                         material.SetVector("_heightSeed", new Vector2(hash(seed, (int)textureSeed, 10000), hash(seed, (int)textureSeed, 10000)));
+                        material.SetInt("_ShadowBehind", shadowBehind ? 1 : 0);
+                        material.SetFloat("_ShadowIntensity", shadowBehind ? (hash(seed, (int)textureSeed, 1000) / 1000f * 0.5f) + 1f : (hash(seed, (int)textureSeed, 1000) / 1000f * 0.5f) + .25f);
                         meshRenderer.material = material;
                         break;
                 }
@@ -168,6 +180,8 @@ public class MeshScript : MonoBehaviour
                 material = new Material(shader);
                 material.SetVector("_heightSeed", new Vector2(hash(seed, (int)textureSeed, 10000), hash(seed, (int)textureSeed, 10000)));
                 material.SetFloat("_heightScale", (hash(seed, (int)textureSeed, 1000) / 1000f * 30f) + 10);
+                material.SetInt("_ShadowBehind", shadowBehind ? 1 : 0);
+                material.SetFloat("_ShadowIntensity", shadowBehind ? (hash(seed, (int)textureSeed, 1000) / 1000f * 0.5f) + 1f : (hash(seed, (int)textureSeed, 1000) / 1000f * 0.5f) + .25f);
                 meshRenderer.material = material;
                 break;
             case BodyType.Star:

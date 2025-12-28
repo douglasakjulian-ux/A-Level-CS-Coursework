@@ -223,7 +223,7 @@ public class GalaxyVisualiser : MonoBehaviour
 
             SystemView systemView = GameObject.FindWithTag("SystemView").GetComponent<SystemView>();
             systemView.seed = bestStar.seed;
-            systemView.DisplaySystem();
+            //systemView.DisplaySystem();
         }
 
         foreach (var root in rootTrees)

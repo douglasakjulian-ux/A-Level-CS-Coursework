@@ -7,6 +7,11 @@ using static MeshScript;
 public class MapGeneration : MonoBehaviour
 {
     public ulong seed;
+    void Awake()
+    {
+        CreateSystem();
+    }
+
     public void CreateSystem()
     {
         GameObject mesh = SystemSettings.mesh;
@@ -18,7 +23,7 @@ public class MapGeneration : MonoBehaviour
             MeshScript meshScript = bodyObject.GetComponent<MeshScript>();
             meshScript.order = body.order;
             meshScript.diameter = body.diameter;
-
+            meshScript.shadowBehind = body.shadowBehind;
             //hash later:
             //meshScript.noise = 
             //meshScript.amplitude = 

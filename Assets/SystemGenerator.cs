@@ -22,6 +22,8 @@ public class BodyData
 
     public int order;
     public int seed;
+
+    public bool shadowBehind;
 }
 
 public class SystemData
@@ -175,9 +177,17 @@ public class SystemData
                 bodyData.diameter = diameter;
                 bodyData.order = i;
                 bodyData.seed = Mathf.Abs((int)seed);
+
+                bool shadowBehind = false;
+                if ((hash(seed, i) * 2f) > 1f)
+                    shadowBehind = true;
+                else
+                    shadowBehind = false;
+                bodyData.shadowBehind = shadowBehind;
+
                 data.Add(bodyData);
 
-                moonGeneration(plaSelect, "Planet", diameter, placement, i);
+                moonGeneration(plaSelect, "Planet", diameter, placement, i, shadowBehind);
                 plaSelect++;
             }
             else if (planetOrder[i] == "Gas Giant")
@@ -190,13 +200,20 @@ public class SystemData
                 bodyData.order = i;
                 bodyData.seed = Mathf.Abs((int)seed);
 
+                bool shadowBehind = false;
+                if ((hash(seed, i) * 2f) > 1f)
+                    shadowBehind = true;
+                else
+                    shadowBehind = false;
+                bodyData.shadowBehind = shadowBehind;
+
                 //meshScript.scale = 15f;
                 //meshScript.amplitude = 8f;
                 //meshScript.speed = 1f;
                 data.Add(bodyData);
 
                 //Generate moons
-                moonGeneration(gasSelect, "Gas", diameter, placement, i);
+                moonGeneration(gasSelect, "Gas", diameter, placement, i, shadowBehind);
                 gasSelect++;
             }
 
@@ -204,7 +221,7 @@ public class SystemData
         }
     }
 
-    void moonGeneration(int arrayPosition, string bodyType, int bodyDiameter, Vector2 bodyPosition, int bodyOrder)
+    void moonGeneration(int arrayPosition, string bodyType, int bodyDiameter, Vector2 bodyPosition, int bodyOrder, bool shadowBehind)
     {
         int moonCount = (bodyType == "Planet") ? planetOrderM[arrayPosition] : gasOrderM[arrayPosition];
         if (moonCount == 0)
@@ -243,6 +260,7 @@ public class SystemData
             bodyData.diameter = diameter;
             bodyData.order = i;
             bodyData.seed = Mathf.Abs((int)seed);
+            bodyData.shadowBehind = shadowBehind;
 
             data.Add(bodyData);
         }
