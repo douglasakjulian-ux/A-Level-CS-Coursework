@@ -9,10 +9,12 @@ public class SystemView : MonoBehaviour
     public ulong seed;
     GameObject systemRoot;
     public GameObject cameraObj;
+    float scaleDown;
 
     void Awake()
     {
         systemRoot = Instantiate(new GameObject("SystemRoot"));
+        scaleDown = 5000f;
     }
 
     public void ClearSystem()
@@ -39,17 +41,17 @@ public class SystemView : MonoBehaviour
         float max = 0f;
         foreach (var body in system.Bodies)
         {
-            if (body.position.x/2500f < min) min = body.position.x/2500f;
-            if (body.position.y/2500f < min) min = body.position.y/2500f;
-            if (body.position.x/2500f > max) max = body.position.x/2500f;
-            if (body.position.y/2500f > max) max = body.position.y/2500f;
+            if (body.position.x/scaleDown < min) min = body.position.x/scaleDown;
+            if (body.position.y/scaleDown < min) min = body.position.y/scaleDown;
+            if (body.position.x/scaleDown > max) max = body.position.x/scaleDown;
+            if (body.position.y/scaleDown > max) max = body.position.y/scaleDown;
 
-            GameObject bodyObject = Instantiate(mesh, body.position/2500f, Quaternion.identity);
+            GameObject bodyObject = Instantiate(mesh, body.position/scaleDown, Quaternion.identity);
             bodyObject.transform.parent = systemRoot.transform;
             bodyObject.layer = LayerMask.NameToLayer("SystemView");
             MeshScript meshScript = bodyObject.GetComponent<MeshScript>();
             meshScript.order = body.order;
-            meshScript.diameter = body.diameter/1250f;
+            meshScript.diameter = body.diameter/(scaleDown/2f);
 
             //hash later:
             //meshScript.noise = 

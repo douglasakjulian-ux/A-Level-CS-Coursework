@@ -17,9 +17,29 @@ public class MapGeneration : MonoBehaviour
         GameObject mesh = SystemSettings.mesh;
 
         SystemData system = SystemGenerator.Generate(seed);
+        var currentBody = system.Bodies[0];
+        GameObject currentObj = null;
         foreach (var body in system.Bodies)
         {
             GameObject bodyObject = Instantiate(mesh, body.position, Quaternion.identity);
+            if (body.moons != 0)
+            {
+                currentBody = body;
+                currentObj = bodyObject;
+            }
+            else if (currentObj != null)
+            {
+                if (currentBody.moons == 0)
+                {
+                    currentBody = null;
+                    currentObj = null;
+                }
+                else
+                {
+                    bodyObject.transform.parent = currentObj.transform;
+                    currentBody.moons--;
+                }
+            }
             MeshScript meshScript = bodyObject.GetComponent<MeshScript>();
             meshScript.order = body.order;
             meshScript.diameter = body.diameter;
@@ -32,6 +52,9 @@ public class MapGeneration : MonoBehaviour
 
             meshScript.bodyType = body.type;
             meshScript.Generate();
+
+            bodyObject.GetComponent<GravitySource>().init();
+            bodyObject.GetComponent<OrbitalLine>().init();
         }
     }
 }

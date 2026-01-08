@@ -5,8 +5,10 @@ using UnityEngine.InputSystem;
 
 public class ShipMovement : MonoBehaviour
 {
+    SystemGravity systemGravity;
+
     //move, y axis = thrust, x axis = turn
-    Vector3 velocity;
+    Vector2 velocity;
     public float maxVelocity;
     InputActions inputActions;
     public float thrust;
@@ -14,30 +16,35 @@ public class ShipMovement : MonoBehaviour
 
     GameObject camObj;
 
+    public Vector2 test;
+
     void Awake()
     {
+        systemGravity = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SystemGravity>();
         camObj = GameObject.FindGameObjectWithTag("MainCamera");
-        velocity = new Vector3(0f, 0f, 0f);
+        velocity = new Vector2(0f, 0f);
         inputActions = new InputActions();
         inputActions.Enable();
     }
 
     void Update()
     {
+        test = systemGravity.GetGravityAt((Vector2)transform.position);
         if (inputActions.Player.Esc.triggered)
         {
             StartCoroutine(GalaxyView());
         }
 
         Vector2 move = inputActions.Player.Move.ReadValue<Vector2>();
-        velocity += transform.up * (move.y * thrust * Time.deltaTime);
-        velocity = Vector3.ClampMagnitude(velocity, maxVelocity);
+        velocity += (Vector2)transform.up * (move.y * thrust * Time.deltaTime);
+        velocity += (systemGravity.GetGravityAt((Vector2)transform.position) * Time.deltaTime);
+        velocity = Vector2.ClampMagnitude(velocity, maxVelocity);
 
         Vector3 rotation = transform.eulerAngles;
         rotation.z -= move.x * turnSpeed * Time.deltaTime;
         transform.eulerAngles = rotation;
 
-        transform.position += velocity * Time.deltaTime;
+        transform.position += (Vector3)velocity * Time.deltaTime;
 
         camObj.transform.position = new Vector3(transform.position.x, transform.position.y, -10f);
     }

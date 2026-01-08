@@ -19,6 +19,7 @@ public class BodyData
     public BodyType type;
     public Vector2 position;
     public float diameter;
+    public int moons = 0;
 
     public int order;
     public int seed;
@@ -118,6 +119,7 @@ public class SystemData
         int[] radiuses = new int[staMod];
         int largestDiameter = 0;
         Debug.Log(staMod);
+        int starDistance = 0;
         for (int i = 0; i < staMod; i++)
         {
             Debug.Log("star loop");
@@ -126,26 +128,26 @@ public class SystemData
                 largestDiameter = 0;
                 for (int x = 0; x < staMod; x++)
                 {
-                    int radius = (int)(hash(seed, i) * 1000f) + 250;
+                    int radius = (int)(hash(seed, i) * 2500f) + 1000;
                     if (radius > largestDiameter)
                     {
                         largestDiameter = radius;
                     }
                 }
-                distance = (int)(largestDiameter + hash(seed, i) * 500f + 250);
+                distance = (int)(largestDiameter + hash(seed, i) * 2500f + 1250);
             }
             else
             {
                 distance = 0;
             }
-
+            starDistance = distance;
             float k = 0f;
             k = (2 * Mathf.PI * i) / staMod;
 
             Vector2 placement = new Vector2(Mathf.Cos(k) * distance, Mathf.Sin(k) * distance);
             //GameObject star = Instantiate(mesh, placement, Quaternion.identity);
             //MeshScript meshScript = star.GetComponent<MeshScript>();
-            int diameter = (int)(hash(seed, i) * 1000f) + 250;
+            int diameter = (int)(hash(seed, i) * 2500f) + 1000;
 
             BodyData bodyData = new BodyData();
             bodyData.type = BodyType.Star;
@@ -155,14 +157,14 @@ public class SystemData
             data.Add(bodyData);
         }
 
-        int preDistance = 800 + largestDiameter * 2;
+        int preDistance = starDistance + largestDiameter * 2;
 
         int plaSelect = 0;
         int gasSelect = 0;
         // generate planets
         for (int i = 0; i < nPlanets; i++)
         {
-            distance = (int)(250 + (hash(seed, i)) * 500f + preDistance);
+            distance = (int)(500 + (hash(seed, i)) * 1000f + preDistance);
             float angle = (float)hash(seed, i) * 360f;
             float k = (2 * Mathf.PI * angle * Mathf.Deg2Rad);
             Vector2 placement = new Vector2(Mathf.Cos(k) * (distance * 2), Mathf.Sin(k) * (distance * 2));
@@ -170,11 +172,12 @@ public class SystemData
             //MeshScript meshScript = planet.GetComponent<MeshScript>();
             if (planetOrder[i] == "Planet")
             {
-                int diameter = (int)((hash(seed, i) * 125) + 50);
+                int diameter = (int)((hash(seed, i) * 200) + 100);
                 BodyData bodyData = new BodyData();
                 bodyData.type = BodyType.Planet;
                 bodyData.position = placement;
                 bodyData.diameter = diameter;
+                bodyData.moons = planetOrderM[plaSelect];
                 bodyData.order = i;
                 bodyData.seed = Mathf.Abs((int)seed);
 
@@ -192,11 +195,12 @@ public class SystemData
             }
             else if (planetOrder[i] == "Gas Giant")
             {
-                int diameter = (int)((hash(seed, i) * 500f) + 100);
+                int diameter = (int)((hash(seed, i) * 1500f) + 500);
                 BodyData bodyData = new BodyData();
                 bodyData.type = BodyType.GasGiant;
                 bodyData.position = placement;
                 bodyData.diameter = diameter;
+                bodyData.moons = gasOrderM[gasSelect];
                 bodyData.order = i;
                 bodyData.seed = Mathf.Abs((int)seed);
 
@@ -231,7 +235,7 @@ public class SystemData
                 moonCount = 1;
             }
         }
-
+        int preDist = 0;
         for (int i = 0; i < moonCount; i++)
         {
             int largestDiameter = 0;
@@ -243,14 +247,12 @@ public class SystemData
                     largestDiameter = radius;
                 }
             }
-            int distance = (int)(largestDiameter * 2 + ((hash(seed, i) * 1000f) % 150) + bodyDiameter);
+            int distance = (int)(largestDiameter * 2 + ((hash(seed, i) * 2000f) % 325) + bodyDiameter + 100);
 
-            float k = 0f;
-            k = (2 * Mathf.PI * i) / moonCount;
+            float angle = (float)hash(seed + (ulong)largestDiameter, i) * 360f;
+            float k = (2 * Mathf.PI * angle * Mathf.Deg2Rad);
 
-            Vector2 placement = new Vector2((Mathf.Cos(k) * distance) + bodyPosition.x, (Mathf.Sin(k) * distance) + bodyPosition.y);
-            //GameObject moon = Instantiate(mesh, placement, Quaternion.identity);
-            //MeshScript meshScript = moon.GetComponent<MeshScript>();
+            Vector2 placement = new Vector2((Mathf.Cos(k) * (distance + preDist)) + bodyPosition.x, (Mathf.Sin(k) * (distance + preDist)) + bodyPosition.y);
             int diameter = (int)((hash(seed, i) * 1000f) % 50) + 10;
             diameter = (diameter > bodyDiameter / 2) ? diameter / 2 : diameter;
 
@@ -263,6 +265,7 @@ public class SystemData
             bodyData.shadowBehind = shadowBehind;
 
             data.Add(bodyData);
+            preDist += distance;
         }
     }
 

@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 55997609}
   - component: {fileID: 55997608}
+  - component: {fileID: 55997610}
   m_Layer: 0
   m_Name: sceneManager
   m_TagString: SceneManager
@@ -149,17 +150,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seed: 18446743465075578589
-  planetMod: 10
-  asteroidMod: 10
-  starMod: 2
-  gasGiantMod: 4
-  planetMoonMod: 0
-  gasGiantMoonMod: 0
-  mesh: {fileID: 9044009882915149399, guid: d75993003f0b17b45bfaa429853b8eca, type: 3}
-  planetOrderM: 
-  gasOrderM: 
-  plaModM: 4
-  gasModM: 9
 --- !u!4 &55997609
 Transform:
   m_ObjectHideFlags: 0
@@ -175,6 +165,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &55997610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 55997607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57797dcfedd777747b6ca1b34c177b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SystemGravity
+  sources: []
 --- !u!4 &62417452 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1109379028394145929, guid: 8ffd4e894807b594e9a11c2441df25ce, type: 3}
@@ -1125,9 +1128,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d0965839c404324baf18ca8cb5aaade, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxVelocity: 500
-  thrust: 500
+  maxVelocity: 600
+  thrust: 600
   turnSpeed: 90
+  test: {x: 0, y: 0}
 --- !u!212 &1319447074
 SpriteRenderer:
   serializedVersion: 2
