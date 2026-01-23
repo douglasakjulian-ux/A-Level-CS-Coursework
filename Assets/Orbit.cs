@@ -2,26 +2,49 @@ using UnityEngine;
 
 public class Orbit : MonoBehaviour
 {
-    [SerializeField] Vector2 barryCenter;
+    public Vector2 barryCenter;
     public float orbitSpeed = 1f;
+    //Vector2 StartingPos => GameObject.FindWithTag("Player").GetComponent<FloatingOrigin>().originOffset;
     Vector2 StartingPos;
-
-    void Awake()
-    {
-        StartingPos = transform.position;
-    }
 
     float angle = 0f;
     float radius;
-    void Start()
+    
+    bool initialized = false;
+    public void init()
     {
+        barryCenter = BarryCenter();
+        if (GetComponent<MeshScript>().bodyType != MeshScript.BodyType.Star && GetComponent<MeshScript>().bodyType != MeshScript.BodyType.Moon)
+        {
+            Vector2 currentPos = transform.position;
+            Vector2 radial = currentPos - barryCenter; // vector from barycenter to object
+            float dist = radial.magnitude;
+            float extra = barryCenter.magnitude; // add this distance to keep objects away from stars
+
+            if (dist > 0.0001f)
+            {
+                Vector2 newPos = barryCenter + radial.normalized * (dist + extra);
+                transform.position = newPos;
+            }
+            else
+            {
+                // fallback: nudge out along X if exactly at barycenter
+                transform.position = (Vector3)(barryCenter + new Vector2(extra, 0f));
+            }
+        }
+
+        StartingPos = transform.position;
         Vector2 dir = StartingPos - barryCenter;
         angle = Mathf.Atan2(dir.x, dir.y);
-        barryCenter = BarryCenter();
+        initialized = true;
+        if (GetComponent<OrbitalLine>() != null)
+            GetComponent<OrbitalLine>().init();
     }
 
     void Update()
     {
+        if (!initialized)
+            return;
         if (GetComponent<MeshScript>().bodyType == MeshScript.BodyType.Moon)
             return;
 
@@ -37,13 +60,17 @@ public class Orbit : MonoBehaviour
         MeshScript[] meshes = FindObjectsByType<MeshScript>(FindObjectsSortMode.None);
         foreach (MeshScript mesh in meshes)
         {
-            if (mesh.bodyType == MeshScript.BodyType.Star && mesh.gameObject != star.gameObject)
-            {
-                otherStar = mesh.gameObject;
-            }
-            else
+            if (mesh.bodyType != MeshScript.BodyType.Star)
+                continue;
+            if (star == null)
             {
                 star = mesh.gameObject;
+                continue;
+            }
+            else if (otherStar == null)
+            {
+                otherStar = mesh.gameObject;
+                break;
             }
         }
         if (otherStar == null)
@@ -51,8 +78,13 @@ public class Orbit : MonoBehaviour
             return Vector2.zero;
         }
 
-        float barryCenterDistance = Vector2.Distance(star.transform.position, otherStar.transform.position) * (star.GetComponent<GravitySource>().mass / (star.GetComponent<GravitySource>().mass * otherStar.GetComponent<GravitySource>().mass));
-        Vector2 barryCenter = (star.transform.position - otherStar.transform.position).normalized * barryCenterDistance;
+        Vector2 barryCenter = (star.transform.position * star.GetComponent<GravitySource>().mass + otherStar.transform.position * otherStar.GetComponent<GravitySource>().mass) / (star.GetComponent<GravitySource>().mass + otherStar.GetComponent<GravitySource>().mass);
         return barryCenter;
     }
+    public void originShift(Vector2 delta)
+    {
+        StartingPos -= delta;
+        barryCenter -= delta;
+    }
+
 }

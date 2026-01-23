@@ -8,6 +8,8 @@ public class GravitySource : MonoBehaviour
 
     public float mass;
     float gravityScale;
+    bool initialised = false;
+
     public void init()
     {
         MeshScript mesh = this.GetComponent<MeshScript>();
@@ -21,6 +23,7 @@ public class GravitySource : MonoBehaviour
         //mass = mesh.diameter / 20f;
         mass = Mathf.Pow(mesh.diameter, 2f);
         gravityStrength = mass * gravityScale;
+        initialised = true;
     }
 
     public Vector2 GetGravity(Vector2 samplePosition)

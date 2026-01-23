@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,36 +10,90 @@ public class OrbitalLine : MonoBehaviour
     public float radius;
     LineRenderer line;
     public Vector2 targetPos;
+    Transform parent = null;
+    Vector2 center;
+    Vector2[] positions;
+    bool moon = false;
 
+    //Orbit MUST BE INITIALIZED before this is called
+    bool initialized = false;
     public void init()
     {
-        line = GetComponent<LineRenderer>();
-        line.useWorldSpace = false;
+        moon = false;
+        GameObject lineOBJ = Instantiate(Resources.Load<GameObject>("OrbitLine"), GameObject.FindWithTag("OrbitLines").transform);
+        lineOBJ.name = "OrbitLine_Planet_" + gameObject.GetComponent<MeshScript>().order;
+        line = lineOBJ.GetComponent<LineRenderer>();
         line.material = new Material(Shader.Find("Sprites/Default"));
         line.startColor = Color.white;
         line.endColor = line.startColor;
         line.positionCount = segments;
-        targetPos = (transform.parent != null) ? transform.parent.position : Vector2.zero;
-        float radius = ((Vector2)transform.position - targetPos).magnitude;
-        Vector2 offset = (transform.parent != null) ? targetPos : Vector2.zero;
+        positions = new Vector2[segments + 1];
+        line.useWorldSpace = false;
+        targetPos = GetComponent<Orbit>().barryCenter;
+        if (gameObject.GetComponent<MeshScript>().bodyType == MeshScript.BodyType.Moon)
+        {
+            lineOBJ.name = "OrbitLine_Moon_" + gameObject.GetComponent<MeshScript>().order;
+            //line.transform.SetParent(transform.parent, worldPositionStays: false);
+            parent = transform.parent;
+            targetPos = parent.position;
+            center = targetPos - (Vector2)parent.position;
+            radius = ((Vector2)transform.position - center).magnitude;
+            moon = true;
+            for (int i = 0; i < segments; i++)
+            {
+                float angle = i * 2f * Mathf.PI / segments;
+                float x = Mathf.Cos(angle) * radius;
+                float y = Mathf.Sin(angle) * radius;
+                positions[i] = new Vector2(x, y);
+
+                line.SetPosition(i, positions[i] + center);
+            }
+            initialized = true;
+            return;
+        }
+        if (parent == null)
+        {
+            Debug.Log("OrbitalLine: Parent is null for " + gameObject.name);
+        }
+        radius = ((Vector2)transform.position - targetPos).magnitude;
         for (int i = 0; i < segments; i++)
         {
             float angle = i * 2f * Mathf.PI / segments;
             float x = Mathf.Cos(angle) * radius;
             float y = Mathf.Sin(angle) * radius;
 
-            line.SetPosition(i, new Vector2(x, y) + offset);
+            line.SetPosition(i, new Vector2(x, y) + targetPos);
         }
         line.loop = true;
         line.sortingOrder = -1;
-        if (transform.parent != null)
-            line.transform.SetParent(transform.parent, worldPositionStays: false);
+        initialized = true;
     }
 
+    float t = 0;
     void Update()
     {
-        if (line == null) { return; }
+        if (!initialized) { return; }
         line.startWidth = Camera.main.orthographicSize * 0.005f;
         line.endWidth = line.startWidth;
+
+        if (moon)
+        {
+            //targetPos = parent.position;
+            center = parent.position;
+            if (t >= 0.1f)
+            {
+                RecalculatePosition();
+                t = 0;
+            }
+            t += Time.deltaTime;
+        }
+    }
+
+    void RecalculatePosition()
+    {
+        for (int i = 0; i < segments; i++)
+        {
+            line.SetPosition(i, positions[i] + center);
+        }
     }
 }

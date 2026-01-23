@@ -9,6 +9,8 @@ TagManager:
   - Selection
   - SystemView
   - SystemInfo
+  - WorldRoot
+  - OrbitLines
   layers:
   - Default
   - TransparentFX

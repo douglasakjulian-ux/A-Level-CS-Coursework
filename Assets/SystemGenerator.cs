@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static MeshScript;
 
 public static class SystemGenerator
@@ -19,6 +21,7 @@ public class BodyData
     public BodyType type;
     public Vector2 position;
     public float diameter;
+    public float speed;
     public int moons = 0;
 
     public int order;
@@ -153,6 +156,7 @@ public class SystemData
             bodyData.type = BodyType.Star;
             bodyData.position = placement;
             bodyData.diameter = diameter;
+            bodyData.speed = 1f;
 
             data.Add(bodyData);
         }
@@ -164,7 +168,8 @@ public class SystemData
         // generate planets
         for (int i = 0; i < nPlanets; i++)
         {
-            distance = (int)(500 + (hash(seed, i)) * 1000f + preDistance);
+            float distanceHash = ((hash(seed, i)) * 5000f);
+            distance = (int)(3750 + (1 + ((distanceHash / 5000f) / 2f) * distanceHash + preDistance));
             float angle = (float)hash(seed, i) * 360f;
             float k = (2 * Mathf.PI * angle * Mathf.Deg2Rad);
             Vector2 placement = new Vector2(Mathf.Cos(k) * (distance * 2), Mathf.Sin(k) * (distance * 2));
@@ -177,6 +182,7 @@ public class SystemData
                 bodyData.type = BodyType.Planet;
                 bodyData.position = placement;
                 bodyData.diameter = diameter;
+                bodyData.speed = (hash(seed, i) * 2f) / (placement.magnitude / 2500f);
                 bodyData.moons = planetOrderM[plaSelect];
                 bodyData.order = i;
                 bodyData.seed = Mathf.Abs((int)seed);
@@ -203,6 +209,7 @@ public class SystemData
                 bodyData.moons = gasOrderM[gasSelect];
                 bodyData.order = i;
                 bodyData.seed = Mathf.Abs((int)seed);
+                bodyData.speed = (hash(seed, i) * 2f) / (placement.magnitude / 2500f);
 
                 bool shadowBehind = false;
                 if ((hash(seed, i) * 2f) > 1f)
@@ -247,7 +254,7 @@ public class SystemData
                     largestDiameter = radius;
                 }
             }
-            int distance = (int)(largestDiameter * 2 + ((hash(seed, i) * 2000f) % 325) + bodyDiameter + 100);
+            int distance = (int)(largestDiameter * 2 + ((hash(seed, i) * 2000f) % 650) + bodyDiameter + 500);
 
             float angle = (float)hash(seed + (ulong)largestDiameter, i) * 360f;
             float k = (2 * Mathf.PI * angle * Mathf.Deg2Rad);
@@ -262,6 +269,7 @@ public class SystemData
             bodyData.diameter = diameter;
             bodyData.order = i;
             bodyData.seed = Mathf.Abs((int)seed);
+            bodyData.speed = (hash(seed, i) * 2f) / (placement.magnitude / 2500f);
             bodyData.shadowBehind = shadowBehind;
 
             data.Add(bodyData);

@@ -16,6 +16,8 @@ public class MeshScript : MonoBehaviour
     public float speed;
     public float scale;
 
+    public float orbitSpeed; //temp place to store value, going to make a data object at some point for all ts
+
     public byte color;
 
     Vector3[] vertices;
@@ -30,7 +32,7 @@ public class MeshScript : MonoBehaviour
 
     public float textureSeed;
     Texture2D texture;
-    bool generated;
+    public bool generated;
     public Texture2D gradientTex;
 
     public bool shadowBehind;
