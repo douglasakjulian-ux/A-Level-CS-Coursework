@@ -168,8 +168,8 @@ public class SystemData
         // generate planets
         for (int i = 0; i < nPlanets; i++)
         {
-            float distanceHash = ((hash(seed, i)) * 5000f);
-            distance = (int)(3750 + (1 + ((distanceHash / 5000f) / 2f) * distanceHash + preDistance));
+            float distanceHash = ((hash(seed, i)) * 4000f);
+            distance = (int)(5000 + (1 + ((distanceHash / 2500f) / 2f) * distanceHash + preDistance));
             float angle = (float)hash(seed, i) * 360f;
             float k = (2 * Mathf.PI * angle * Mathf.Deg2Rad);
             Vector2 placement = new Vector2(Mathf.Cos(k) * (distance * 2), Mathf.Sin(k) * (distance * 2));

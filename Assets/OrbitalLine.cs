@@ -17,8 +17,10 @@ public class OrbitalLine : MonoBehaviour
 
     //Orbit MUST BE INITIALIZED before this is called
     bool initialized = false;
+    GameObject worldRoot;
     public void init()
     {
+        worldRoot = GameObject.FindWithTag("WorldRoot");
         moon = false;
         GameObject lineOBJ = Instantiate(Resources.Load<GameObject>("OrbitLine"));
         lineOBJ.transform.SetParent(GameObject.FindWithTag("OrbitLines").transform, false);
@@ -48,7 +50,7 @@ public class OrbitalLine : MonoBehaviour
                 float y = Mathf.Sin(angle) * radius;
                 positions[i] = new Vector2(x, y);
 
-                line.SetPosition(i, positions[i]);
+                line.SetPosition(i, positions[i] + targetPos);
             }
             line.loop = true;
             initialized = true;
@@ -96,7 +98,7 @@ public class OrbitalLine : MonoBehaviour
     {
         for (int i = 0; i < segments; i++)
         {
-            line.SetPosition(i, positions[i] + (Vector2)transform.parent.position);
+            line.SetPosition(i, positions[i] + (Vector2)transform.parent.position - ((Vector2)worldRoot.transform.position - Vector2.zero));
         }
     }
 }
