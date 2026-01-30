@@ -86,5 +86,4 @@ public class Orbit : MonoBehaviour
         StartingPos -= delta;
         barryCenter -= delta;
     }
-
 }
