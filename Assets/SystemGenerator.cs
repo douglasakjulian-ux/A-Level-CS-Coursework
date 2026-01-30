@@ -156,7 +156,7 @@ public class SystemData
             bodyData.type = BodyType.Star;
             bodyData.position = placement;
             bodyData.diameter = diameter;
-            bodyData.speed = 1f;
+            bodyData.speed = 2f;
 
             data.Add(bodyData);
         }
@@ -182,7 +182,7 @@ public class SystemData
                 bodyData.type = BodyType.Planet;
                 bodyData.position = placement;
                 bodyData.diameter = diameter;
-                bodyData.speed = (hash(seed, i) * 2f) / (placement.magnitude / 1250f) / 10f;
+                bodyData.speed = 0.005f + (hash(seed, i) * 2f) / (placement.magnitude / 3600f) / 10f;
                 bodyData.moons = planetOrderM[plaSelect];
                 bodyData.order = i;
                 bodyData.seed = Mathf.Abs((int)seed);
@@ -209,7 +209,7 @@ public class SystemData
                 bodyData.moons = gasOrderM[gasSelect];
                 bodyData.order = i;
                 bodyData.seed = Mathf.Abs((int)seed);
-                bodyData.speed = (hash(seed, i) * 2f) / (placement.magnitude / 1250f) / 10f;
+                bodyData.speed = 0.005f + (hash(seed, i) * 2f) / (placement.magnitude / 3600f) / 10f;
 
                 bool shadowBehind = false;
                 if ((hash(seed, i) * 2f) > 1f)
@@ -269,7 +269,7 @@ public class SystemData
             bodyData.diameter = diameter;
             bodyData.order = i;
             bodyData.seed = Mathf.Abs((int)seed);
-            //bodyData.speed = (hash(seed, i) * 2f) / (placement.magnitude / 1250f) / 10f;
+            bodyData.speed = 0.005f + (hash(seed, i) * 3f) / ((bodyPosition.magnitude - placement.magnitude)/ 5000f) / 10f;
             bodyData.speed = 0.05f;
             bodyData.shadowBehind = shadowBehind;
 
