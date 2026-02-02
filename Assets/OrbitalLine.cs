@@ -26,6 +26,7 @@ public class OrbitalLine : MonoBehaviour
         lineOBJ.transform.SetParent(GameObject.FindWithTag("OrbitLines").transform, false);
         lineOBJ.name = "OrbitLine_Planet_" + gameObject.GetComponent<MeshScript>().order + "_" + GetComponent<Orbit>().barryCenter;
         line = lineOBJ.GetComponent<LineRenderer>();
+        line.sortingLayerName = "OrbitLine";
         line.material = new Material(Shader.Find("Sprites/Default"));
         line.startColor = Color.white;
         line.endColor = line.startColor;

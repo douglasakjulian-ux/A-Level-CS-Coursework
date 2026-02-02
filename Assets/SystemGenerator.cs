@@ -182,7 +182,7 @@ public class SystemData
                 bodyData.type = BodyType.Planet;
                 bodyData.position = placement;
                 bodyData.diameter = diameter;
-                bodyData.speed = 0.005f + (hash(seed, i) * 2f) / (placement.magnitude / 3600f) / 10f;
+                bodyData.speed = 0.005f + (hash(seed, i) * 2f) / (placement.magnitude) / 100f;
                 bodyData.moons = planetOrderM[plaSelect];
                 bodyData.order = i;
                 bodyData.seed = Mathf.Abs((int)seed);
@@ -209,7 +209,7 @@ public class SystemData
                 bodyData.moons = gasOrderM[gasSelect];
                 bodyData.order = i;
                 bodyData.seed = Mathf.Abs((int)seed);
-                bodyData.speed = 0.005f + (hash(seed, i) * 2f) / (placement.magnitude / 3600f) / 10f;
+                bodyData.speed = 0.005f + (hash(seed, i) * 2f) / (placement.magnitude) / 100f;
 
                 bool shadowBehind = false;
                 if ((hash(seed, i) * 2f) > 1f)
