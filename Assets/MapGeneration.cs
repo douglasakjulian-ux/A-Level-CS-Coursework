@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using static MeshScript;
@@ -9,15 +10,27 @@ public class MapGeneration : MonoBehaviour
     public ulong seed;
     GameObject[] bodies;
     Transform worldRoot;
+
+    public bool testing;
     void Awake()
     {
         worldRoot = GameObject.FindWithTag("WorldRoot").transform;
-        CreateSystem();
-        StartCoroutine(WaitForGenerated());
+        if (testing == true)
+        {
+            CreateSystem();
+        }
     }
 
     public void CreateSystem()
     {
+        Generate();
+        StartCoroutine(WaitForGenerated());
+    }
+
+    void Generate()
+    {
+        StartCoroutine(WaitForGenerated());
+
         GameObject mesh = SystemSettings.mesh;
 
         SystemData system = SystemGenerator.Generate(seed);

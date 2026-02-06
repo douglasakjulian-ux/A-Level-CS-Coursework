@@ -183,7 +183,7 @@ public class MeshScript : MonoBehaviour
                 material.SetVector("_heightSeed", new Vector2(hash(seed, (int)textureSeed, 10000), hash(seed, (int)textureSeed, 10000)));
                 material.SetFloat("_heightScale", (hash(seed, (int)textureSeed, 1000) / 1000f * 30f) + 10);
                 material.SetInt("_ShadowBehind", shadowBehind ? 1 : 0);
-                material.SetFloat("_ShadowIntensity", shadowBehind ? (hash(seed, (int)textureSeed, 1000) / 1000f * 0.5f) + 1f : (hash(seed, (int)textureSeed, 1000) / 1000f * 0.5f) + .25f);
+                material.SetFloat("_ShadowIntensity", shadowBehind ? (hash(seed, (int)textureSeed, 1000) / 1000f * 0.5f) + 1f : (hash(seed, (int)textureSeed, 1000) / 1000f * 0.4f) + .35f);
                 meshRenderer.material = material;
                 break;
             case BodyType.Star:
