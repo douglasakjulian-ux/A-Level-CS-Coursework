@@ -13,6 +13,7 @@ public class Orbit : MonoBehaviour
     bool initialized = false;
     Vector3 worldRootPos;
     GameObject worldRoot;
+    float mDist;
     public void init()
     {
         worldRoot = GameObject.FindWithTag("WorldRoot");
@@ -37,6 +38,7 @@ public class Orbit : MonoBehaviour
         }
 
         StartingPos = transform.position;
+        mDist = Vector2.Distance(StartingPos, (Vector2)transform.parent.position);
         Vector2 dir = StartingPos - barryCenter;
         angle = Mathf.Atan2(dir.x, dir.y);
         initialized = true;
@@ -48,12 +50,20 @@ public class Orbit : MonoBehaviour
     {
         if (!initialized)
             return;
-        if (GetComponent<MeshScript>().bodyType == MeshScript.BodyType.Moon)
-            return;
+        //if (GetComponent<MeshScript>().bodyType == MeshScript.BodyType.Moon)
+        //    return;
 
         angle += orbitSpeed * Time.deltaTime;
-        Vector2 offset = (transform.parent == null) ? new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * Vector2.Distance(StartingPos, barryCenter) : new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * Vector2.Distance(StartingPos, (Vector2)transform.parent.position);
-        transform.position = (transform.parent == null) ? barryCenter + offset : (Vector2)transform.parent.position + offset;
+        if (GetComponent<MeshScript>().bodyType == MeshScript.BodyType.Moon)
+        {
+            Vector2 offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * mDist;
+            transform.position = (Vector2)transform.parent.position + offset;
+        }
+        else
+        {
+            Vector2 offset = (transform.parent == null) ? new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * Vector2.Distance(StartingPos, barryCenter) : new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * Vector2.Distance(StartingPos, (Vector2)transform.parent.position);
+            transform.position = (transform.parent == null) ? barryCenter + offset : (Vector2)transform.parent.position + offset;
+        }
 
         worldRootPos = worldRoot.transform.position;
     }
