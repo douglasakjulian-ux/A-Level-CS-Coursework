@@ -232,6 +232,7 @@ public class SystemData
         }
     }
 
+    int tCount = 0;
     void moonGeneration(int arrayPosition, string bodyType, int bodyDiameter, Vector2 bodyPosition, int bodyOrder, bool shadowBehind)
     {
         int moonCount = (bodyType == "Planet") ? planetOrderM[arrayPosition] : gasOrderM[arrayPosition];
@@ -256,7 +257,7 @@ public class SystemData
             }
             int distance = (int)(largestDiameter * 2 + ((hash(seed, i) * 2000f) % 650) + bodyDiameter + 500);
 
-            float angle = (float)hash(seed + (ulong)largestDiameter, i) * 360f;
+            float angle = (float)hash(seed + (ulong)arrayPosition, (int)(tCount * Mathf.Abs((int)seed) * 360f));
             float k = (2 * Mathf.PI * angle * Mathf.Deg2Rad);
 
             Vector2 placement = new Vector2((Mathf.Cos(k) * (distance + preDist)) + bodyPosition.x, (Mathf.Sin(k) * (distance + preDist)) + bodyPosition.y);
@@ -275,6 +276,7 @@ public class SystemData
 
             data.Add(bodyData);
             preDist += distance;
+            tCount++;
         }
     }
 
