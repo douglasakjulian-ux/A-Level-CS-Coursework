@@ -39,7 +39,7 @@ public class Orbit : MonoBehaviour
 
         StartingPos = transform.position;
         mDist = Vector2.Distance(StartingPos, (Vector2)transform.parent.position);
-        Vector2 dir = StartingPos - barryCenter;
+        Vector2 dir = (GetComponent<MeshScript>().bodyType != MeshScript.BodyType.Moon) ? StartingPos - barryCenter : StartingPos - (Vector2)transform.parent.transform.position;
         angle = Mathf.Atan2(dir.x, dir.y);
         initialized = true;
         if (GetComponent<OrbitalLine>() != null)
@@ -90,7 +90,7 @@ public class Orbit : MonoBehaviour
         }
         if (otherStar == null)
         {
-            return Vector2.zero;
+            return star.transform.position;
         }
 
         Vector2 barryCenter = (star.transform.position * star.GetComponent<GravitySource>().mass + otherStar.transform.position * otherStar.GetComponent<GravitySource>().mass) / (star.GetComponent<GravitySource>().mass + otherStar.GetComponent<GravitySource>().mass);

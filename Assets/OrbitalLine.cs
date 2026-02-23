@@ -86,7 +86,7 @@ public class OrbitalLine : MonoBehaviour
         if (moon)
         {
             targetPos = parent.position;
-            if (t >= 0.1f)
+            if (t >= 0.05f)
             {
                 RecalculatePosition();
                 t = 0;

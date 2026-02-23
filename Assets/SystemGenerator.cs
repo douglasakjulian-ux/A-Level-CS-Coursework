@@ -182,7 +182,10 @@ public class SystemData
                 bodyData.type = BodyType.Planet;
                 bodyData.position = placement;
                 bodyData.diameter = diameter;
-                bodyData.speed = 0.005f + (hash(seed, i) * 2f) / (placement.magnitude) / 100f;
+                float orbitTime = 30f + (hash(seed, i) * 60f);
+                float orbitTimeS = orbitTime * 60f;
+                float speed = (360f / orbitTimeS) / (placement.magnitude * Mathf.PI);
+                bodyData.speed = (speed + hash(seed, i) * 500f) / (placement.magnitude * Mathf.PI);
                 bodyData.moons = planetOrderM[plaSelect];
                 bodyData.order = i;
                 bodyData.seed = Mathf.Abs((int)seed);
@@ -209,7 +212,11 @@ public class SystemData
                 bodyData.moons = gasOrderM[gasSelect];
                 bodyData.order = i;
                 bodyData.seed = Mathf.Abs((int)seed);
-                bodyData.speed = 0.005f + (hash(seed, i) * 2f) / (placement.magnitude) / 100f;
+                float orbitTime = 30f + (hash(seed, i) * 60f);
+                float orbitTimeS = orbitTime * 60f;
+                float speed = (360f / orbitTimeS) / (placement.magnitude * Mathf.PI);
+                bodyData.speed = (speed + hash(seed, i) * 500f) / (placement.magnitude * Mathf.PI);
+                Debug.Log($"radians: {speed}, Orbit time: {orbitTime}m; {orbitTimeS}s");
 
                 bool shadowBehind = false;
                 if ((hash(seed, i) * 2f) > 1f)
@@ -232,7 +239,6 @@ public class SystemData
         }
     }
 
-    int tCount = 0;
     void moonGeneration(int arrayPosition, string bodyType, int bodyDiameter, Vector2 bodyPosition, int bodyOrder, bool shadowBehind)
     {
         int moonCount = (bodyType == "Planet") ? planetOrderM[arrayPosition] : gasOrderM[arrayPosition];
@@ -249,7 +255,7 @@ public class SystemData
             int largestDiameter = 0;
             for (int x = 0; x < moonCount; x++)
             {
-                int radius = (int)((hash(seed, i) * 1000f) % 50) + 10;
+                int radius = (int)(hash(seed, (bodyOrder * 100) + x) * 1000f % 50) + 10;
                 if (radius > largestDiameter)
                 {
                     largestDiameter = radius;
@@ -257,11 +263,12 @@ public class SystemData
             }
             int distance = (int)(largestDiameter * 2 + ((hash(seed, i) * 2000f) % 650) + bodyDiameter + 500);
 
-            float angle = (float)hash(seed + (ulong)arrayPosition, (int)(tCount * Mathf.Abs((int)seed) * 360f));
-            float k = (2 * Mathf.PI * angle * Mathf.Deg2Rad);
+            float angle = hash(seed, (bodyOrder * 100) + i) * 360f;
+            Debug.Log($"angle: {angle}, bodyOrder: {bodyOrder}");
+            float k = angle * Mathf.Deg2Rad;
 
-            Vector2 placement = new Vector2((Mathf.Cos(k) * (distance + preDist)) + bodyPosition.x, (Mathf.Sin(k) * (distance + preDist)) + bodyPosition.y);
-            int diameter = (int)((hash(seed, i) * 1000f) % 50) + 10;
+            Vector2 placement = new Vector2((Mathf.Cos(k) * (distance + preDist)), (Mathf.Sin(k) * (distance + preDist))) + bodyPosition;
+            int diameter = (int)((hash(seed, (bodyOrder * 100) + i) * 1000f) % 50) + 10;
             diameter = (diameter > bodyDiameter / 2) ? diameter / 2 : diameter;
 
             BodyData bodyData = new BodyData();
@@ -270,13 +277,15 @@ public class SystemData
             bodyData.diameter = diameter;
             bodyData.order = i;
             bodyData.seed = Mathf.Abs((int)seed);
-            bodyData.speed = 0.005f + (hash(seed, i) * 3f) / ((bodyPosition.magnitude - placement.magnitude)/ 5000f) / 10f;
-            bodyData.speed = 0.05f;
+            float orbitTime = 5f + (hash(seed, i) * 10f);
+            float orbitTimeS = orbitTime * 60f;
+            float speed = (360f / orbitTimeS) / (placement.magnitude * Mathf.PI);
+            bodyData.speed = (speed + hash(seed, (bodyOrder * 100) + i) * 500f) / (placement.magnitude * Mathf.PI);
+            //bodyData.speed = 0.005f + (hash(seed, i) * 3f) / (((bodyPosition.magnitude - placement.magnitude) * Mathf.PI) / 5000f) / 10f;
             bodyData.shadowBehind = shadowBehind;
 
             data.Add(bodyData);
             preDist += distance;
-            tCount++;
         }
     }
 
