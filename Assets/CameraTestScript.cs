@@ -10,7 +10,7 @@ public class CameraTestScript : MonoBehaviour
 
     public int targetWidth;
     public int targetHeight;
-    RenderTexture lowResRT;
+    RenderTexture renderTexture;
 
     InputActions inputActions;
 
@@ -22,7 +22,7 @@ public class CameraTestScript : MonoBehaviour
         inputActions = new InputActions();
         inputActions.Enable();
 
-        lowResRT = new RenderTexture(targetWidth, targetHeight, 16);
+        //renderTexture = new RenderTexture(targetWidth, targetHeight, 16);
         //lowResRT.filterMode = FilterMode.Point;
         //SetResolution(1920, 1080);
 
@@ -46,34 +46,43 @@ public class CameraTestScript : MonoBehaviour
         //    if (lowRes == false)
         //    {
         //        //SetResolution(320, 180);
-        //        Camera.main.targetTexture = lowResRT;
+        //        renderTexture = Resources.Load<RenderTexture>("Shaders/LowRes");
+        //        renderTexture.Release();
+        //        renderTexture.width = 320;
+        //        renderTexture.height = 180;
+        //        pixelCam.targetTexture = renderTexture;
         //        lowRes = !lowRes;
         //    }
         //    else if (lowRes == true)
         //    {
         //        //SetResolution(1920, 1080);
-        //        Camera.main.targetTexture = default;
+        //        renderTexture = Resources.Load<RenderTexture>("Shaders/LowRes");
+        //        renderTexture.Release();
+        //        renderTexture.width = 1920;
+        //        renderTexture.height = 1080;
+        //        pixelCam.targetTexture = renderTexture;
         //        lowRes = !lowRes;
         //    }
+        //    renderTexture.filterMode = FilterMode.Point;
         //}
     }
 
-    void SetResolution(int width, int height)
-    {
-        if (lowResRT != null)
-        {
-            lowResRT.Release();
-            Destroy(lowResRT);
-        }
+    //void SetResolution(int width, int height)
+    //{
+    //    if (lowResRT != null)
+    //    {
+    //        lowResRT.Release();
+    //        Destroy(lowResRT);
+    //    }
 
-        lowResRT = new RenderTexture(width, height, 16);
-        lowResRT.filterMode = FilterMode.Point;
-        Camera.main.targetTexture = lowResRT;
-    }
+    //    lowResRT = new RenderTexture(width, height, 16);
+    //    lowResRT.filterMode = FilterMode.Point;
+    //    Camera.main.targetTexture = lowResRT;
+    //}
 
     void OnGUI()
     {
-        GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), Camera.main.targetTexture, ScaleMode.StretchToFill, false);
+        GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), gameCam.targetTexture, ScaleMode.StretchToFill, false);
     }
 
     public Vector3 GetMouseWorldPosition(Vector2 mouse)
