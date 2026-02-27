@@ -11,6 +11,7 @@ TagManager:
   - SystemInfo
   - WorldRoot
   - OrbitLines
+  - GameCamera
   layers:
   - Default
   - TransparentFX
