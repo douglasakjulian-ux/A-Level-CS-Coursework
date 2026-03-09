@@ -43,13 +43,14 @@ Material:
     m_Ints: []
     m_Floats:
     - _ChromaticStrength: 0
-    - _Contrast: 15
+    - _Contrast: 1.025
     - _CurvatureAmount: 0.05
     - _Frequency: 800
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ScanlineStrength: 1
-    - _VignetteStrength: 2
+    - _VignetteStrength: 4.5
+    - _WaveSpeed: 2
     m_Colors:
     - _Tint: {r: 0.7752581, g: 0.9622642, b: 0.82292634, a: 1}
   m_BuildTextureStacks: []
