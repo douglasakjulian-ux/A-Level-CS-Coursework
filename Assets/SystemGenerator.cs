@@ -28,6 +28,19 @@ public class BodyData
     public int seed;
 
     public bool shadowBehind;
+
+    public BeltData belt = null;
+    public class BeltData
+    {
+        public int asteroidCount;
+        public float innerRadius;
+        public float outerRadius;
+
+        public Vector2[] positions;
+        public int[] seeds;
+
+        public bool[] shadowBehind;
+    }
 }
 
 public class SystemData
@@ -54,15 +67,28 @@ public class SystemData
     int[] planetOrderM;
     int[] gasOrderM;
 
+    int preDistance;
+
     void Generate()
     {
         int plaMod = 3 + (int)(hash(seed, 1) * 1000f) % planetMod;
-        int astMod = (int)((seed % (ulong)asteroidMod) * 15) + 10;
+        int astMod = (int)((seed % (ulong)asteroidMod) * 15) + 1000;
         int staMod = (int)(seed % (ulong)starMod) + 1;
         int gasMod = 1 + (int)(hash(seed, 2) * 1000f) % gasGiantMod;
 
         //number of planets
         int nPlanets = plaMod + gasMod;
+        int beltPos = 2;
+        bool belt = false;
+        for (int i = 2; i < Mathf.Clamp(nPlanets, 2, 7) + 1; i++)
+        {
+            if (hash(seed, i + nPlanets + astMod) * 1000f < 500f) {
+                belt = true;
+                break;
+            }
+            beltPos++;
+        }
+        if (belt) { nPlanets++; }
         planetOrder = new string[nPlanets];
 
         //create array of planets
@@ -79,6 +105,10 @@ public class SystemData
             {
                 planetOrder[i] = "Gas Giant";
                 tempGasMod--;
+            }
+            else
+            {
+                planetOrder[i] = "Belt";
             }
         }
 
@@ -103,6 +133,36 @@ public class SystemData
                 i = 0;
             }
         }
+
+        //insert belt
+        if (belt)
+        {
+            int tempPos = 0;
+            bool found = false;
+            bool placed = false;
+            string plaTemp = null;
+            for (int i = 1; i < planetOrder.Length; i++)
+            {
+                if (planetOrder[i] == "Belt")
+                {
+                    tempPos = i;
+                    found = true;
+                }
+                if (i == beltPos && planetOrder[i] != "Belt")
+                {
+                    plaTemp = planetOrder[i];
+                    planetOrder[i] = "Belt";
+                    placed = true;
+                }
+
+                if (placed && found && plaTemp != null)
+                {
+                    planetOrder[tempPos] = plaTemp;
+                    break;
+                }
+            }
+        }
+        Debug.Log(planetOrder);
 
         planetOrderM = new int[plaMod];
         for (int i = 0; i < planetOrderM.Length; i++)
@@ -161,7 +221,7 @@ public class SystemData
             data.Add(bodyData);
         }
 
-        int preDistance = starDistance + largestDiameter * 2;
+        preDistance = starDistance + largestDiameter * 2;
 
         int plaSelect = 0;
         int gasSelect = 0;
@@ -234,13 +294,58 @@ public class SystemData
                 moonGeneration(gasSelect, "Gas", diameter, placement, i, shadowBehind);
                 gasSelect++;
             }
+            else if (planetOrder[i] == "Belt")
+            {
+                BodyData bodyData = new BodyData();
+                bodyData.belt = new BodyData.BeltData();
+                bodyData.type = BodyType.Asteroid;
+                float width = 2000f + hash(seed, i) * 4000f;
+                bodyData.belt.innerRadius = placement.magnitude - width * 0.5f;
+                bodyData.belt.outerRadius = placement.magnitude + width * 0.5f;
+                Debug.Log($"InnerRadius: {bodyData.belt.innerRadius}, OuterRadius: {bodyData.belt.outerRadius}.");
+                //bodyData.belt.asteroidCount = (int)((placement.magnitude * (hash(seed, i) * 25f)) / 1000f) + 100;
+                bodyData.belt.asteroidCount = 50; // Temporary, for performance reasons
+                bodyData.order = i;
+                //bodyData.seed = Mathf.Abs((int)seed);
+                data.Add(bodyData);
 
-            preDistance = distance;
+                bodyData.position = placement;
+                bodyData.belt.positions = new Vector2[bodyData.belt.asteroidCount];
+                bodyData.belt.shadowBehind = new bool[bodyData.belt.asteroidCount];
+                bodyData.belt.seeds = new int[bodyData.belt.asteroidCount];
+                for (int a = 0; a < bodyData.belt.asteroidCount; a++)
+                {
+                    float ang = hash(seed, a) * Mathf.PI * 2f;
+                    float rad = Mathf.Lerp(
+                        bodyData.belt.innerRadius,
+                        bodyData.belt.outerRadius,
+                        hash(seed, a + 1)
+                    );
+
+                    Vector2 offset = new Vector2(
+                        Mathf.Cos(ang),
+                        Mathf.Sin(ang)
+                    ) * rad;
+
+                    bodyData.belt.positions[a] = bodyData.position + offset;
+                    bool shadowBehind = false;
+                    if ((hash(seed, i) * 2f) > 1f)
+                        shadowBehind = true;
+                    else
+                        shadowBehind = false;
+                    bodyData.belt.shadowBehind[a] = shadowBehind;
+                    bodyData.belt.seeds[a] = (int)(hash(seed, a) * 10000f);
+                }
+                data.Add(bodyData);
+            }
+
+            preDistance += distance;
         }
     }
 
     void moonGeneration(int arrayPosition, string bodyType, int bodyDiameter, Vector2 bodyPosition, int bodyOrder, bool shadowBehind)
     {
+        preDistance = 0;
         int moonCount = (bodyType == "Planet") ? planetOrderM[arrayPosition] : gasOrderM[arrayPosition];
         if (moonCount == 0)
         {
@@ -287,6 +392,7 @@ public class SystemData
             data.Add(bodyData);
             preDist += distance;
         }
+        preDistance += preDist;
     }
 
     float hash(ulong seed, int x)

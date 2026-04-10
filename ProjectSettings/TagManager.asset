@@ -12,6 +12,7 @@ TagManager:
   - WorldRoot
   - OrbitLines
   - GameCamera
+  - Asteroid
   layers:
   - Default
   - TransparentFX

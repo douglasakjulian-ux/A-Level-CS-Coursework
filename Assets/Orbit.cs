@@ -11,7 +11,7 @@ public class Orbit : MonoBehaviour
     float radius;
     
     bool initialized = false;
-    Vector3 worldRootPos;
+    Vector3 worldRootPos => worldRoot.transform.position;
     GameObject worldRoot;
     float mDist;
     public void init()
@@ -65,7 +65,7 @@ public class Orbit : MonoBehaviour
             transform.position = (transform.parent == null) ? barryCenter + offset : (Vector2)transform.parent.position + offset;
         }
 
-        worldRootPos = worldRoot.transform.position;
+        //worldRootPos = worldRoot.transform.position;
     }
 
     Vector2 BarryCenter()

@@ -4,7 +4,7 @@ public static class SystemSettings
 {
     //Generation Settings
     public static int planetMod = 10;
-    public static int asteroidMod = 10;
+    public static int asteroidMod = 1000;
     public static int starMod = 2;
     public static int gasGiantMod = 4;
     public static int planetMoonMod = 2;
@@ -12,5 +12,5 @@ public static class SystemSettings
     public static int resolution = 100;
 
     //Mesh for bodies
-    public static GameObject mesh = Resources.Load<GameObject>("Mesh");
+    public static GameObject mesh = Resources.Load<GameObject>("Body");
 }

@@ -5,12 +5,12 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
+//[RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
 public class MeshScript : MonoBehaviour
 {
     public int seed;
 
-    int resolution;
+    public int resolution = 0;
     public float diameter;
     public float amplitude;
     public float speed;
@@ -67,6 +67,7 @@ public class MeshScript : MonoBehaviour
     {
         GasGiant,
         Planet,
+        Asteroid,
         Moon,
         Star,
     }
@@ -177,6 +178,15 @@ public class MeshScript : MonoBehaviour
                         break;
                 }
                 break;
+            case BodyType.Asteroid:
+                shader = Resources.Load<Shader>("Shaders/MoonShader");
+                material = new Material(shader);
+                material.SetVector("_heightSeed", new Vector2(hash(seed, (int)textureSeed, 10000), hash(seed, (int)textureSeed, 10000)));
+                material.SetFloat("_heightScale", (hash(seed, (int)textureSeed, 1000) / 1000f * 30f) + 10);
+                material.SetInt("_ShadowBehind", shadowBehind ? 1 : 0);
+                material.SetFloat("_ShadowIntensity", shadowBehind ? (hash(seed, (int)textureSeed, 1000) / 1000f * 0.5f) + 1f : (hash(seed, (int)textureSeed, 1000) / 1000f * 0.4f) + .35f);
+                meshRenderer.material = material;
+                break;
             case BodyType.Moon:
                 shader = Resources.Load<Shader>("Shaders/MoonShader");
                 material = new Material(shader);
@@ -223,13 +233,42 @@ public class MeshScript : MonoBehaviour
 
         mesh = new Mesh();
 
+        bool asteroid = false;
+        //float offset = diameter;
+        //float lerpLength = resolution - ((360f / (float)resolution) * 95f);
+        if (bodyType == BodyType.Asteroid) { asteroid = true; }
         for (int i = 0; i < resolution; i++)
         {
             float k = (2 * Mathf.PI * i) / resolution;
-            vertices[i + 1] = new Vector3(Mathf.Cos(k) * (diameter), Mathf.Sin(k) * (diameter), 0);
+
+            //offset = (asteroid) ? offset + ((hash(seed, i, 1000) / 750f) - 0.75f) / 5f : diameter;
+            //float noise = 0f;
+            //noise += Mathf.PerlinNoise(Mathf.Cos(k) * scale + (int)hash(seed, i, 1000000000), Mathf.Sin(k) * scale + (int)hash(seed, i, 1000000000));
+            //noise += Mathf.PerlinNoise(Mathf.Cos(k) * scale * 2 + (int)hash(seed, i, 1000000000), Mathf.Sin(k) * scale * 2 + (int)hash(seed, i, 1000000000)) * 0.5f;
+            //noise += Mathf.PerlinNoise(Mathf.Cos(k) * scale * 4 + (int)hash(seed, i, 1000000000), Mathf.Sin(k) * scale * 4 + (int)hash(seed, i, 1000000000)) * 0.25f;
+
+            //noise /= 1.75f;
+            //offset = (asteroid) ? offset + (noise - 0.5f) * amplitude : diameter;
+            float baseNoise = Mathf.PerlinNoise(i * 0.08f + seed, seed);
+            float jaggedNoise = Mathf.PerlinNoise(i * 0.6f + seed * 2, seed * 2);
+
+            float radius = (asteroid) ? diameter + (baseNoise - 0.5f) * amplitude : diameter;
+            radius = Mathf.Round(radius * 5f) / 5f;
+            radius += (asteroid) ? (jaggedNoise - 0.5f) * amplitude * 0.35f : 0f;
+
+            vertices[i + 1] = new Vector3(Mathf.Cos(k) * (radius), Mathf.Sin(k) * (radius), 0);
 
             uv[i + 1] = new Vector2(Mathf.Cos(k) * 0.5f + 0.5f, Mathf.Sin(k) * 0.5f + 0.5f);
+
+            //offset = diameter;
+
+            //if (i >= (360f / (float)resolution) * 95f)
+            //{
+            //    //offset = Mathf.Lerp(offset, diameter, (i - lerpLength) / (resolution - lerpLength));
+            //    offset = Mathf.Lerp(offset, diameter, (float)(i - (resolution - lerpLength)) / (float)lerpLength);
+            //}
         }
+
         for (int i = 0; i < resolution; i++)
         {
             int n = i * 3;
