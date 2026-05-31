@@ -11,11 +11,14 @@ public class Orbit : MonoBehaviour
     float radius;
     
     bool initialized = false;
+
     Vector3 worldRootPos => worldRoot.transform.position;
     GameObject worldRoot;
     float mDist;
+
     public void init()
     {
+        orbitSpeed = GetComponent<MeshScript>().orbitSpeed;
         worldRoot = GameObject.FindWithTag("WorldRoot");
         barryCenter = BarryCenter();
         if (GetComponent<MeshScript>().bodyType != MeshScript.BodyType.Star && GetComponent<MeshScript>().bodyType != MeshScript.BodyType.Moon)
@@ -50,8 +53,6 @@ public class Orbit : MonoBehaviour
     {
         if (!initialized)
             return;
-        //if (GetComponent<MeshScript>().bodyType == MeshScript.BodyType.Moon)
-        //    return;
 
         angle += orbitSpeed * Time.deltaTime;
         if (GetComponent<MeshScript>().bodyType == MeshScript.BodyType.Moon)
@@ -64,8 +65,6 @@ public class Orbit : MonoBehaviour
             Vector2 offset = (transform.parent == null) ? new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * Vector2.Distance(StartingPos, barryCenter) : new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * Vector2.Distance(StartingPos, (Vector2)transform.parent.position);
             transform.position = (transform.parent == null) ? barryCenter + offset : (Vector2)transform.parent.position + offset;
         }
-
-        //worldRootPos = worldRoot.transform.position;
     }
 
     Vector2 BarryCenter()

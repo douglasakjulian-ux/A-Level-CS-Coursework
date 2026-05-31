@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seed: 18446743636990408053
-  testing: 1
+  testing: 0
 --- !u!4 &55997609
 Transform:
   m_ObjectHideFlags: 0

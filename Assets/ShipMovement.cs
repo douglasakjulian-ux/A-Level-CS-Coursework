@@ -26,7 +26,7 @@ public class ShipMovement : MonoBehaviour
         inputActions = new InputActions();
         inputActions.Enable();
     }
-
+    
     void Update()
     {
         test = systemGravity.GetGravityAt((Vector2)transform.position);

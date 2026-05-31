@@ -60,6 +60,10 @@ public class SystemView : MonoBehaviour
             //meshScript.scale = 
 
             meshScript.bodyType = body.type;
+            if (meshScript.bodyType == MeshScript.BodyType.Asteroid)
+            {
+                bodyObject.SetActive(false); // Asteroids too small to see in view and would cause too much lag if all generated at once, so just don't show them
+            }
             meshScript.Generate();
 
             switch (body.type)
