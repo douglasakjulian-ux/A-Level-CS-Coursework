@@ -1,10 +1,10 @@
 
 
 # Procedural Galaxy Generator
-A procedural galaxy / star system geneartion system developed in UNity as part of my A-level CS coursework.
+A procedural galaxy / star system generation system developed in Unity as part of my A-level CS coursework.
 
 ## Overview
-This project generates a galaxy from a user-provided seed, which generates star systems from procedurally generated (or user-provided) seeds, allowing the same system to be recreated consistently. Generated systems can contain planets, moon, asteroids fields, each with uniquie properties, e.g. a planet can have an "earth-like" or "desert" biome type.
+This project generates a galaxy from a user-provided seed, which generates star systems from procedurally generated (or user-provided) seeds, allowing the same system to be recreated consistently. Generated systems can contain planets, moons, asteroid fields, each with unique properties, e.g. a planet can have an "earth-like" or "desert" biome type.
 
 ## Features
 - Deterministic seed generation
@@ -28,7 +28,7 @@ https://youtu.be/xQWpAugylWY
 <img width="975" height="428" alt="image" src="https://github.com/user-attachments/assets/40bef32b-46c4-40f7-9778-888413a83228" />
 
 ## What I learned
-- Procedural gneration techniques
+- Procedural generation techniques
 - Object-oriented programming
 - Unity UI development
 - Project planning and debugging
