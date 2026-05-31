@@ -25,7 +25,7 @@ https://youtu.be/xQWpAugylWY
 ## Screenshots
 <img width="750" height="715" alt="image" src="https://github.com/user-attachments/assets/37f5f26d-5356-463f-aebd-36b407d7421e" />
 <img width="750" height="715" alt="image" src="https://github.com/user-attachments/assets/c44dd571-f86c-4779-93b9-f3d0f00ab00e" />
-<img width="975" height="912" alt="image" src="https://github.com/user-attachments/assets/38f42fa3-7c6e-4cd5-a770-5719566f0bc1" />
+<img width="750" height="715" alt="image" src="https://github.com/user-attachments/assets/38f42fa3-7c6e-4cd5-a770-5719566f0bc1" />
 
 
 ## What I learned
