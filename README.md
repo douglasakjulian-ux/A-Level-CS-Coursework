@@ -1,3 +1,5 @@
+
+
 # Procedural Galaxy Generator
 A procedural galaxy / star system geneartion system developed in UNity as part of my A-level CS coursework.
 
@@ -18,6 +20,8 @@ This project generates a galaxy from a user-provided seed, which generates star 
 - Visual Studio
 
 ## Demonstration
+
+
 
 ## Screenshots
 
