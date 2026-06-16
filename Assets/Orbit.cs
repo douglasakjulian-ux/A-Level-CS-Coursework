@@ -7,7 +7,7 @@ public class Orbit : MonoBehaviour
     //Vector2 StartingPos => GameObject.FindWithTag("Player").GetComponent<FloatingOrigin>().originOffset;
     Vector2 StartingPos;
 
-    float angle = 0f;
+    [SerializeField] float angle = 0f;
     float radius;
     
     bool initialized = false;
@@ -55,6 +55,7 @@ public class Orbit : MonoBehaviour
             return;
 
         angle += orbitSpeed * Time.deltaTime;
+        if (angle >= 360f) { angle -= 360f; }
         if (GetComponent<MeshScript>().bodyType == MeshScript.BodyType.Moon)
         {
             Vector2 offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * mDist;
