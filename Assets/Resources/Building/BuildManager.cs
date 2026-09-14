@@ -9,7 +9,7 @@ public class BuildManager : MonoBehaviour
     public int gridSize = 50;
     public GameObject core;
     bool[,] grid;
-    public GameObject[,] objGrid;
+    GameObject[,] objGrid;
     int gridWidth;
     int gridHeight;
     GameObject selectedObj;
@@ -21,6 +21,9 @@ public class BuildManager : MonoBehaviour
     float cellSizeY = 1f;
     int rotations = 0;
     bool deleteMode = false;
+    GameObject selected = null;
+    Vector2Int prePos = new Vector2Int(0, 0);
+
     Vector2 mousePos => Camera.main.ScreenToWorldPoint(inputActions.Player.MousePos.ReadValue<Vector2>());
     void Awake()
     {
@@ -80,34 +83,40 @@ public class BuildManager : MonoBehaviour
             }
 
             deleteMode = !deleteMode;
+            selected = null;
         }
+
+
+        Vector2Int pos = new Vector2Int(0, 0);        
 
         if (deleteMode) {
             int cellX = WorldToCellX(mousePos.x);
             int cellY = WorldToCellY(mousePos.y);
-
-            GameObject selected = null;
-            GameObject preSelected = selected;
-
+            pos = new Vector2Int(cellX, cellY);
             if (grid[cellX, cellY] == true)
             {
                 if (objGrid[cellX, cellY].tag != "Core" && objGrid[cellX, cellY] != selected)
                 {
                     selected = objGrid[cellX, cellY];
                     selected.GetComponent<SpriteRenderer>().color = new Color32(255, 200, 200, 255);
+                    Debug.Log("pink");
                 }
             }
-            if (selected != preSelected && preSelected != null)
+
+            Debug.Log($"{pos}, {prePos}");
+            if (pos != prePos && objGrid[prePos.x, prePos.y] != null)
             {
-                preSelected.GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
+                Debug.Log("black");
+                objGrid[prePos.x, prePos.y].GetComponent<SpriteRenderer>().color = new Color32(0, 0, 0, 255);
             }
 
-            if (selected != null && inputActions.Player.LMB.triggered)
+            if (selected != null && inputActions.Player.LMB.triggered && selected.tag != "Core")
             {
                 grid[cellX, cellY] = false;
                 Destroy(selected);
                 objGrid[cellX, cellY] = null;
             }
+            prePos = pos;
         }
     }
 
@@ -121,8 +130,8 @@ public class BuildManager : MonoBehaviour
                 originX + x * cellSizeX + cellSizeX / 2f,
                 originY + y * cellSizeY + cellSizeY / 2f
             ); 
-            Instantiate(obj, position, Quaternion.Euler(0, 0, rotations * 90));
-            objGrid[x, y] = obj;
+            //Instantiate(obj, position, Quaternion.Euler(0, 0, rotations * 90));
+            objGrid[x, y] = Instantiate(obj, position, Quaternion.Euler(0, 0, rotations * 90));
 
             //selectedObj = null; // Clear selection after building
             //Destroy(ghost); // Destroy the ghost object
@@ -158,21 +167,38 @@ public class BuildManager : MonoBehaviour
 
     public void Selected(GameObject obj)
     {
-        if (deleteMode)
-        {
-            deleteMode = false;
-        }
-        if (selectedObj != null)
-        {
-            selectedObj = null;
-        }
         if (ghost != null)
         {
             Destroy(ghost);
             ghost = null;
         }
+
         selectedObj = obj;
-        ghost = Instantiate(selectedObj, Camera.main.ScreenToWorldPoint(inputActions.Player.MousePos.ReadValue<Vector2>()), Quaternion.identity);
+        ghost = Instantiate(selectedObj, mousePos, Quaternion.identity);
+
+        SpriteRenderer[] renderers =
+            ghost.GetComponentsInChildren<SpriteRenderer>();
+
+        foreach (SpriteRenderer spriteRenderer in renderers)
+        {
+            spriteRenderer.color = Color.white;
+        }
+
+        //if (deleteMode)
+        //{
+        //    deleteMode = false;
+        //}
+        //if (selectedObj != null)
+        //{
+        //    selectedObj = null;
+        //}
+        //if (ghost != null)
+        //{
+        //    Destroy(ghost);
+        //    ghost = null;
+        //}
+        //selectedObj = obj;
+        //ghost = Instantiate(selectedObj, Camera.main.ScreenToWorldPoint(inputActions.Player.MousePos.ReadValue<Vector2>()), Quaternion.identity);
     }
 
     //int WorldToCellX(float x) => (int)((x) / cellSizeX);
