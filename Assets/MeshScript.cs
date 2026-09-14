@@ -165,9 +165,11 @@ public class MeshScript : MonoBehaviour
                         color1 = Color.red;
                         gradientTex = gradientTextureVol(color1, color2);
                         material.SetTexture("_GradientTexture", gradientTex);
-                        material.SetFloat("_heightScale", (hash(seed, (int)textureSeed, 1000) / 1000f * 25f) + 10);
-                        float seaLevel = hash(seed, (int)textureSeed, 1000) / 1000f * 0.4f;
-                        if (seaLevel > 0.2f) { seaLevel *= 2.5f; }
+                        material.SetFloat("_heightScale", (hash(seed, (int)textureSeed, 1000) / 1000f * 25f) + 15);
+                        float seaLevel = (hash(seed, (int)textureSeed, 1000) / 1000f * 0.5f) + 0.2f;
+                        Debug.Log("S: " + seaLevel.ToString());
+                        if (seaLevel > 0.4f) { seaLevel *= 2.5f; }
+                        if (seaLevel > 1f) { seaLevel = 1f; }
                         material.SetFloat("_seaLevel", seaLevel);
                         material.SetFloat("_airScale", hash(seed, (int)textureSeed, 1000) / 1000f * 25f);
                         material.SetFloat("_airSpeed", hash(seed, (int)textureSeed, 1000) / 1000f * 0.1f);

@@ -1,3 +1,4 @@
+using System.Data;
 using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -6,7 +7,9 @@ using static UnityEngine.UI.Image;
 public class BuildManager : MonoBehaviour
 {
     public int gridSize = 50;
+    public GameObject core;
     bool[,] grid;
+    public GameObject[,] objGrid;
     int gridWidth;
     int gridHeight;
     GameObject selectedObj;
@@ -16,6 +19,8 @@ public class BuildManager : MonoBehaviour
     float originY;
     float cellSizeX = 1f;
     float cellSizeY = 1f;
+    int rotations = 0;
+    bool deleteMode = false;
     Vector2 mousePos => Camera.main.ScreenToWorldPoint(inputActions.Player.MousePos.ReadValue<Vector2>());
     void Awake()
     {
@@ -24,6 +29,7 @@ public class BuildManager : MonoBehaviour
         originX = -(gridWidth * cellSizeX) / 2f;
         originY = -(gridHeight * cellSizeY) / 2f;
         grid = new bool[gridWidth, gridHeight];
+        objGrid = new GameObject[gridWidth, gridHeight];
         inputActions = new InputActions();
         inputActions.Enable();
         selectedObj = null;
@@ -32,8 +38,11 @@ public class BuildManager : MonoBehaviour
             for (int y = 0; y < grid.GetLength(1); y++)
             {
                 grid[x, y] = false;
+                objGrid[x, y] = null;
             }
         }
+
+        Build(gridWidth / 2, gridHeight / 2, core);
     }
 
     void Update()
@@ -48,9 +57,56 @@ public class BuildManager : MonoBehaviour
                 originY + cellY * cellSizeY + cellSizeY / 2f
             );
 
+            ghost.transform.rotation = Quaternion.Euler(0, 0, rotations * 90);
+
+            if (inputActions.Build.Rotate.triggered)
+            {
+                rotations += 1;
+            }
+
             if (inputActions.Player.LMB.triggered)
             {
                 Build((int)cellX, (int)cellY, selectedObj);
+            }
+        }
+
+        //deselect:
+        if (inputActions.Build.Delete.triggered)
+        {
+            if (selectedObj != null) {
+                selectedObj = null;
+                Destroy(ghost);
+                ghost = null;
+            }
+
+            deleteMode = !deleteMode;
+        }
+
+        if (deleteMode) {
+            int cellX = WorldToCellX(mousePos.x);
+            int cellY = WorldToCellY(mousePos.y);
+
+            GameObject selected = null;
+            GameObject preSelected = selected;
+
+            if (grid[cellX, cellY] == true)
+            {
+                if (objGrid[cellX, cellY].tag != "Core" && objGrid[cellX, cellY] != selected)
+                {
+                    selected = objGrid[cellX, cellY];
+                    selected.GetComponent<SpriteRenderer>().color = new Color32(255, 200, 200, 255);
+                }
+            }
+            if (selected != preSelected && preSelected != null)
+            {
+                preSelected.GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
+            }
+
+            if (selected != null && inputActions.Player.LMB.triggered)
+            {
+                grid[cellX, cellY] = false;
+                Destroy(selected);
+                objGrid[cellX, cellY] = null;
             }
         }
     }
@@ -65,10 +121,11 @@ public class BuildManager : MonoBehaviour
                 originX + x * cellSizeX + cellSizeX / 2f,
                 originY + y * cellSizeY + cellSizeY / 2f
             ); 
-            Instantiate(obj, position, Quaternion.identity);
+            Instantiate(obj, position, Quaternion.Euler(0, 0, rotations * 90));
+            objGrid[x, y] = obj;
 
-            selectedObj = null; // Clear selection after building
-            Destroy(ghost); // Destroy the ghost object
+            //selectedObj = null; // Clear selection after building
+            //Destroy(ghost); // Destroy the ghost object
         }
     }
 
@@ -92,7 +149,6 @@ public class BuildManager : MonoBehaviour
         if (!occupied)
         {
             return true; // Valid build
-
         }
         else
         {
@@ -102,6 +158,10 @@ public class BuildManager : MonoBehaviour
 
     public void Selected(GameObject obj)
     {
+        if (deleteMode)
+        {
+            deleteMode = false;
+        }
         if (selectedObj != null)
         {
             selectedObj = null;
