@@ -93,21 +93,25 @@ public class BuildManager : MonoBehaviour
             int cellX = WorldToCellX(mousePos.x);
             int cellY = WorldToCellY(mousePos.y);
             pos = new Vector2Int(cellX, cellY);
-            if (grid[cellX, cellY] == true)
+            if (grid[cellX, cellY] == true && objGrid[cellX, cellY].tag != "Core")
             {
-                if (objGrid[cellX, cellY].tag != "Core" && objGrid[cellX, cellY] != selected)
+                if (objGrid[cellX, cellY] != selected)
                 {
                     selected = objGrid[cellX, cellY];
                     selected.GetComponent<SpriteRenderer>().color = new Color32(255, 200, 200, 255);
                     Debug.Log("pink");
                 }
             }
+            if (grid[cellX, cellY] == false || objGrid[cellX, cellY].tag == "Core")
+            {
+                selected = null;
+            }
 
             Debug.Log($"{pos}, {prePos}");
             if (pos != prePos && objGrid[prePos.x, prePos.y] != null)
             {
                 Debug.Log("black");
-                objGrid[prePos.x, prePos.y].GetComponent<SpriteRenderer>().color = new Color32(0, 0, 0, 255);
+                objGrid[prePos.x, prePos.y].GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
             }
 
             if (selected != null && inputActions.Player.LMB.triggered && selected.tag != "Core")
@@ -167,6 +171,11 @@ public class BuildManager : MonoBehaviour
 
     public void Selected(GameObject obj)
     {
+        if (deleteMode)
+        {
+            deleteMode = false;
+        }
+
         if (ghost != null)
         {
             Destroy(ghost);
