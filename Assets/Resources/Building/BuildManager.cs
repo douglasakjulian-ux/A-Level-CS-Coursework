@@ -23,6 +23,7 @@ public class BuildManager : MonoBehaviour
     bool deleteMode = false;
     GameObject selected = null;
     Vector2Int prePos = new Vector2Int(0, 0);
+    public GameObject deleteUI;
 
     Vector2 mousePos => Camera.main.ScreenToWorldPoint(inputActions.Player.MousePos.ReadValue<Vector2>());
     void Awake()
@@ -83,6 +84,19 @@ public class BuildManager : MonoBehaviour
             }
 
             deleteMode = !deleteMode;
+
+            if (deleteUI != null)
+            {
+                if (deleteMode == true)
+                {
+                    deleteUI.SetActive(true);
+                }
+                else
+                {
+                    deleteUI.SetActive(false);
+                }
+            }
+
             selected = null;
         }
 
