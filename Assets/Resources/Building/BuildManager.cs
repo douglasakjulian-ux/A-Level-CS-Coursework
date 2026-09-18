@@ -24,7 +24,8 @@ public class BuildManager : MonoBehaviour
     GameObject selected = null;
     Vector2Int prePos = new Vector2Int(0, 0);
     public GameObject deleteUI;
-
+    public GameObject saveUI;
+    
     Vector2 mousePos => Camera.main.ScreenToWorldPoint(inputActions.Player.MousePos.ReadValue<Vector2>());
     void Awake()
     {
@@ -90,10 +91,12 @@ public class BuildManager : MonoBehaviour
                 if (deleteMode == true)
                 {
                     deleteUI.SetActive(true);
+                    saveUI.SetActive(false);
                 }
                 else
                 {
                     deleteUI.SetActive(false);
+                    saveUI.SetActive(true);
                 }
             }
 
@@ -226,6 +229,11 @@ public class BuildManager : MonoBehaviour
 
     //int WorldToCellX(float x) => (int)((x) / cellSizeX);
     //int WorldToCellY(float y) => (int)((y) / cellSizeY);
+
+    public void SaveContentsActive()
+    {
+        saveUI.SetActive(!saveUI.activeSelf);
+    }
 
     int WorldToCellX(float x) { return Mathf.FloorToInt((x - originX) / cellSizeX); }
     int WorldToCellY(float y) { return Mathf.FloorToInt((y - originY) / cellSizeY); }
