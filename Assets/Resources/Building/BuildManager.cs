@@ -3,6 +3,7 @@ using Unity.AppUI.UI;
 using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 using static UnityEngine.UI.Image;
 using System.Reflection;
@@ -74,7 +75,7 @@ public class BuildManager : MonoBehaviour
                 rotations += 1;
             }
 
-            if (inputActions.Player.LMB.triggered)
+            if (inputActions.Player.LMB.triggered && !EventSystem.current.IsPointerOverGameObject())
             {
                 Build((int)cellX, (int)cellY, selectedObj);
             }
@@ -136,7 +137,7 @@ public class BuildManager : MonoBehaviour
                 objGrid[prePos.x, prePos.y].GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
             }
 
-            if (selected != null && inputActions.Player.LMB.triggered && selected.tag != "Core")
+            if (selected != null && inputActions.Player.LMB.triggered && !EventSystem.current.IsPointerOverGameObject() && selected.tag != "Core")
             {
                 grid[cellX, cellY] = false;
                 Destroy(selected);
