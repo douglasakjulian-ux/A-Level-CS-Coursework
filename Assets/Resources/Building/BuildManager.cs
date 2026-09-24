@@ -1,15 +1,18 @@
 using System.Data;
 using Unity.AppUI.UI;
+using UnityEditor;
 using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.UIElements;
 using static UnityEngine.UI.Image;
+using System.Reflection;
 
 public class BuildManager : MonoBehaviour
 {
     public int gridSize = 50;
     public GameObject core;
     bool[,] grid;
-    GameObject[,] objGrid;
+    public GameObject[,] objGrid;
     int gridWidth;
     int gridHeight;
     GameObject selectedObj;
@@ -25,10 +28,12 @@ public class BuildManager : MonoBehaviour
     Vector2Int prePos = new Vector2Int(0, 0);
     public GameObject deleteUI;
     public GameObject saveUI;
+    SaveData saveData;
     
     Vector2 mousePos => Camera.main.ScreenToWorldPoint(inputActions.Player.MousePos.ReadValue<Vector2>());
     void Awake()
     {
+        saveData = GetComponent<SaveData>();
         gridWidth = gridSize;
         gridHeight = gridSize;
         originX = -(gridWidth * cellSizeX) / 2f;
@@ -153,6 +158,7 @@ public class BuildManager : MonoBehaviour
             ); 
             //Instantiate(obj, position, Quaternion.Euler(0, 0, rotations * 90));
             objGrid[x, y] = Instantiate(obj, position, Quaternion.Euler(0, 0, rotations * 90));
+            objGrid[x, y].name = obj.name;
 
             //selectedObj = null; // Clear selection after building
             //Destroy(ghost); // Destroy the ghost object
@@ -229,6 +235,59 @@ public class BuildManager : MonoBehaviour
 
     //int WorldToCellX(float x) => (int)((x) / cellSizeX);
     //int WorldToCellY(float y) => (int)((y) / cellSizeY);
+
+    string gridToString()
+    {
+        string gridString = "";
+        for (int y = 0; y < gridSize; y++)
+        {
+            for (int x = 0; x < gridSize; x++) //O(n^2)
+            {
+                if (objGrid[x, y] != null)
+                {
+                    if (objGrid[x, y].tag == "Core") { continue; }
+                    gridString += objGrid[x, y].name + "," + x.ToString() + "," + y.ToString() + "," + ((int)(objGrid[x, y].transform.eulerAngles.z) / 90).ToString() + "|";
+                }
+            }
+        }
+        gridString = gridString.TrimEnd('|');
+        return gridString;
+    }
+
+    public void Save(int slot)
+    {
+        string data = gridToString();
+        saveData.save(data, SaveData.Type.Ship, slot);
+    }
+
+    public void Load(int slot)
+    {
+        for (int x = 0; x < gridSize; x++)
+        {
+            for (int y = 0; y < gridSize; y++)
+            {
+                if (objGrid[x, y] != null)
+                {
+                    if (objGrid[x, y].tag == "Core") { continue; }
+                    grid[x, y] = false;
+                    Destroy(objGrid[x, y]);
+                    objGrid[x, y] = null;
+                }
+            }
+        }
+
+        List<SaveData.ModuleData> modules = saveData.loadData(SaveData.Type.Ship, slot);
+        foreach (SaveData.ModuleData module in modules)
+        {
+            GameObject obj = Resources.Load<GameObject>("Building/Modules/" + module.name);
+            if (obj != null)
+            {
+                rotations = module.rotation;
+                Build(module.x, module.y, obj);
+                //objGrid[module.x, module.y].transform.rotation = Quaternion.Euler(0, 0, module.rotation * 90);
+            }
+        }
+    }
 
     public void SaveContentsActive()
     {

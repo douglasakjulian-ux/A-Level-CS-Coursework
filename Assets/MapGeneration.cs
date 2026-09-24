@@ -58,7 +58,7 @@ public class MapGeneration : MonoBehaviour
 
                     for (int y = 0; y < size; y++)
                     {
-                        for (int x = 0; x < size; x++)
+                        for (int x = 0; x < size; x++) //O(n^4)
                         {
                             float dx = (x - size / 2f) / (size / 2f);
                             float dy = (y - size / 2f) / (size / 2f);

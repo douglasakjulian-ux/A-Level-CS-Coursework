@@ -1,0 +1,13 @@
+Crafts--
+Save1-
+Name:
+Modules:Engine,23,24,0|Fuel,24,24,0|Fuel,25,24,0|Fuel,26,24,0|Engine,23,25,0|Fuel,24,25,0|Fuel,26,25,0|Cockpit,27,25,0|Engine,23,26,0|Fuel,24,26,0|Fuel,25,26,0|Fuel,26,26,0
+Save2-
+Name:
+Modules:Engine,23,24,0|Fuel,24,24,0|Fuel,25,24,0|Fuel,26,24,0|Engine,23,25,0|Fuel,24,25,0|Fuel,26,25,0|Cockpit,27,25,0|Engine,23,26,0|Fuel,24,26,0|Fuel,25,26,0|Fuel,26,26,0
+Save3-
+Name:
+Modules:Engine,23,24,0|Fuel,24,24,0|Fuel,25,24,0|Fuel,26,24,0|Engine,23,25,0|Fuel,24,25,0|Fuel,26,25,0|Cockpit,27,25,0|Engine,23,26,0|Fuel,24,26,0|Fuel,25,26,0|Fuel,26,26,0
+Save4-
+Name:
+Modules:

@@ -123,7 +123,7 @@ public class Quadtree<T>
         return closestStar;
     }
 
-    public Quadtree<T> FindDeepest(Vector2 pos, int depthTo)
+    public Quadtree<T> FindDeepest(Vector2 pos, int depthTo) // O(4^n)
     {
         if (!rect.Contains(pos)) { return null; }
 
