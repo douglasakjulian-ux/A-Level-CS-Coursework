@@ -30,11 +30,13 @@ public class BuildManager : MonoBehaviour
     public GameObject deleteUI;
     public GameObject saveUI;
     SaveData saveData;
+    MergeManager mergeManager;
     
     Vector2 mousePos => Camera.main.ScreenToWorldPoint(inputActions.Player.MousePos.ReadValue<Vector2>());
     void Awake()
     {
         saveData = GetComponent<SaveData>();
+        mergeManager = GetComponent<MergeManager>();
         gridWidth = gridSize;
         gridHeight = gridSize;
         originX = -(gridWidth * cellSizeX) / 2f;
@@ -139,6 +141,11 @@ public class BuildManager : MonoBehaviour
 
             if (selected != null && inputActions.Player.LMB.triggered && !EventSystem.current.IsPointerOverGameObject() && selected.tag != "Core")
             {
+                if (objGrid[cellX, cellY].TryGetComponent<Merge>(out Merge merge))
+                {
+                    mergeManager.RemoveMerge(merge);
+                    mergeManager.UpdateMerges();
+                }
                 grid[cellX, cellY] = false;
                 Destroy(selected);
                 objGrid[cellX, cellY] = null;
@@ -160,6 +167,12 @@ public class BuildManager : MonoBehaviour
             //Instantiate(obj, position, Quaternion.Euler(0, 0, rotations * 90));
             objGrid[x, y] = Instantiate(obj, position, Quaternion.Euler(0, 0, rotations * 90));
             objGrid[x, y].name = obj.name;
+
+            if (objGrid[x, y].TryGetComponent<Merge>(out Merge merge))
+            {
+                mergeManager.AddMerge(merge, MergeManager.MergeType.Fuel, new Vector2Int(x, y));
+                mergeManager.UpdateMerges();
+            }
 
             //selectedObj = null; // Clear selection after building
             //Destroy(ghost); // Destroy the ghost object
@@ -270,6 +283,7 @@ public class BuildManager : MonoBehaviour
                 if (objGrid[x, y] != null)
                 {
                     if (objGrid[x, y].tag == "Core") { continue; }
+                    mergeManager.RemoveMerge(objGrid[x, y].GetComponent<Merge>());
                     grid[x, y] = false;
                     Destroy(objGrid[x, y]);
                     objGrid[x, y] = null;
