@@ -51,6 +51,33 @@ public class MergeManager : MonoBehaviour
         { 1, 1, 1 }
     };
 
+    int[,] vertFull =
+    {
+        { 0, 1, 1 },
+        { 1, 0, 1 },
+        { 1, 1, 1 }
+    };
+
+    int[,] vert2Full =
+    {
+        { 0, 1, 1 },
+        { 1, 0, 1 },
+        { 1, 1, 0 }
+    };
+
+    int[,] vert3Full =
+    {
+        { 0, 1, 0 },
+        { 1, 0, 1 },
+        { 1, 1, 0 }
+    };
+    
+    int[,] crossRoads =
+    {
+        { 0, 1, 0 },
+        { 1, 0, 1 },
+        { 0, 1, 0 }
+    };
     int[,] fullStraight = 
     {
         { 1, 1, 0 },
@@ -138,7 +165,7 @@ public class MergeManager : MonoBehaviour
         {
             for (int j = 0; j < a.GetLength(1); j++)
             {
-                if (a[i, j] != b[i, j])
+                if (b[i, j] == 1 && a[i, j] != 1)
                 {
                     return false;
                 }
@@ -156,7 +183,7 @@ public class MergeManager : MonoBehaviour
             //full
             if (Match(connections, full) || Match(connections, Rotate(full)) || Match(connections, Rotate(Rotate(full))) || Match(connections, Rotate(Rotate(Rotate(full)))))
             {
-                int rotation = GetRotation(connections, end);
+                int rotation = GetRotation(connections, full);
 
                 if (rotation != -1)
                 {
@@ -164,10 +191,32 @@ public class MergeManager : MonoBehaviour
                     mergeData.merge.transform.rotation = Quaternion.Euler(0, 0, -rotation * 90);
                 }
             }
+            // vert full
+            else if (Match(connections, vertFull) || Match(connections, Rotate(vertFull)) || Match(connections, Rotate(Rotate(vertFull))) || Match(connections, Rotate(Rotate(Rotate(vertFull)))))
+            {
+                int rotation = GetRotation(connections, vertFull);
+
+                if (rotation != -1)
+                {
+                    mergeData.merge.SetSprite(11);
+                    mergeData.merge.transform.rotation = Quaternion.Euler(0, 0, -rotation * 90);
+                }
+            }
+            // vert 2 full
+            else if (Match(connections, vert2Full) || Match(connections, Rotate(vert2Full)) || Match(connections, Rotate(Rotate(vert2Full))) || Match(connections, Rotate(Rotate(Rotate(vert2Full)))))
+            {
+                int rotation = GetRotation(connections, vert2Full);
+
+                if (rotation != -1)
+                {
+                    mergeData.merge.SetSprite(13);
+                    mergeData.merge.transform.rotation = Quaternion.Euler(0, 0, -rotation * 90);
+                }
+            }
             // t full
             else if (Match(connections, tFull) || Match(connections, Rotate(tFull)) || Match(connections, Rotate(Rotate(tFull))) || Match(connections, Rotate(Rotate(Rotate(tFull)))))
             {
-                int rotation = GetRotation(connections, end);
+                int rotation = GetRotation(connections, tFull);
 
                 if (rotation != -1)
                 {
@@ -175,10 +224,21 @@ public class MergeManager : MonoBehaviour
                     mergeData.merge.transform.rotation = Quaternion.Euler(0, 0, -rotation * 90);
                 }
             }
+            // vert 3 full
+            else if (Match(connections, vert3Full) || Match(connections, Rotate(vert3Full)) || Match(connections, Rotate(Rotate(vert3Full))) || Match(connections, Rotate(Rotate(Rotate(vert3Full)))))
+            {
+                int rotation = GetRotation(connections, vert3Full);
+
+                if (rotation != -1)
+                {
+                    mergeData.merge.SetSprite(14);
+                    mergeData.merge.transform.rotation = Quaternion.Euler(0, 0, -rotation * 90);
+                }
+            }
             // full straight
             else if (Match(connections, fullStraight) || Match(connections, Rotate(fullStraight)) || Match(connections, Rotate(Rotate(fullStraight))) || Match(connections, Rotate(Rotate(Rotate(fullStraight)))))
             {
-                int rotation = GetRotation(connections, end);
+                int rotation = GetRotation(connections, fullStraight);
 
                 if (rotation != -1)
                 {
@@ -189,7 +249,7 @@ public class MergeManager : MonoBehaviour
             // corner full
             else if (Match(connections, cornerFull) || Match(connections, Rotate(cornerFull)) || Match(connections, Rotate(Rotate(cornerFull))) || Match(connections, Rotate(Rotate(Rotate(cornerFull)))))
             {
-                int rotation = GetRotation(connections, end);
+                int rotation = GetRotation(connections, cornerFull);
 
                 if (rotation != -1)
                 {
@@ -200,7 +260,7 @@ public class MergeManager : MonoBehaviour
             // corner full flip
             else if (Match(connections, cornerFullFlip) || Match(connections, Rotate(cornerFullFlip)) || Match(connections, Rotate(Rotate(cornerFullFlip))) || Match(connections, Rotate(Rotate(Rotate(cornerFullFlip)))))
             {
-                int rotation = GetRotation(connections, end);
+                int rotation = GetRotation(connections, cornerFullFlip);
 
                 if (rotation != -1)
                 {
@@ -211,7 +271,27 @@ public class MergeManager : MonoBehaviour
             // full corner
             else if (Match(connections, fullCorner) || Match(connections, Rotate(fullCorner)) || Match(connections, Rotate(Rotate(fullCorner))) || Match(connections, Rotate(Rotate(Rotate(fullCorner)))))
             {
-                int rotation = GetRotation(connections, end);
+                int rotation = GetRotation(connections, fullCorner);
+
+                if (rotation != -1)
+                {
+                    mergeData.merge.SetSprite(3);
+                    mergeData.merge.transform.rotation = Quaternion.Euler(0, 0, -rotation * 90);
+                }
+            }
+            // cross roads
+            else if (Match(connections, crossRoads) || Match(connections, Rotate(crossRoads)) || Match(connections, Rotate(Rotate(crossRoads))) || Match(connections, Rotate(Rotate(Rotate(crossRoads)))))
+            {
+                int rotation = GetRotation(connections, crossRoads);
+                if (rotation != -1)
+                {
+                    mergeData.merge.SetSprite(12);
+                    mergeData.merge.transform.rotation = Quaternion.Euler(0, 0, -rotation * 90);
+                }
+            }
+            else if (Match(connections, fullCorner) || Match(connections, Rotate(fullCorner)) || Match(connections, Rotate(Rotate(fullCorner))) || Match(connections, Rotate(Rotate(Rotate(fullCorner)))))
+            {
+                int rotation = GetRotation(connections, fullCorner);
 
                 if (rotation != -1)
                 {
@@ -222,7 +302,7 @@ public class MergeManager : MonoBehaviour
             // t junction
             else if (Match(connections, tJunction) || Match(connections, Rotate(tJunction)) || Match(connections, Rotate(Rotate(tJunction))) || Match(connections, Rotate(Rotate(Rotate(tJunction)))))
             {
-                int rotation = GetRotation(connections, end);
+                int rotation = GetRotation(connections, tJunction);
 
                 if (rotation != -1)
                 {
@@ -233,7 +313,7 @@ public class MergeManager : MonoBehaviour
             // straight
             else if (Match(connections, straight) || Match(connections, Rotate(straight)) || Match(connections, Rotate(Rotate(straight))) || Match(connections, Rotate(Rotate(Rotate(straight)))))
             {
-                int rotation = GetRotation(connections, end);
+                int rotation = GetRotation(connections, straight);
 
                 if (rotation != -1)
                 {
@@ -244,7 +324,7 @@ public class MergeManager : MonoBehaviour
             // corner
             else if (Match(connections, corner) || Match(connections, Rotate(corner)) || Match(connections, Rotate(Rotate(corner))) || Match(connections, Rotate(Rotate(Rotate(corner)))))
             {
-                int rotation = GetRotation(connections, end);
+                int rotation = GetRotation(connections, corner);
 
                 if (rotation != -1)
                 {

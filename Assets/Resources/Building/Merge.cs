@@ -25,19 +25,19 @@ public class Merge : MonoBehaviour
         connections = new int[,]
         {
             {
-                objGrid[position.x - 1, position.y + 1] != null ? 1 : 0,
-                objGrid[position.x,     position.y + 1] != null ? 1 : 0,
-                objGrid[position.x + 1, position.y + 1] != null ? 1 : 0
+                objGrid[position.x - 1, position.y + 1] != null && objGrid[position.x, position.y].name == this.name ? 1 : 0,
+                objGrid[position.x    , position.y + 1] != null && objGrid[position.x, position.y].name == this.name ? 1 : 0,
+                objGrid[position.x + 1, position.y + 1] != null && objGrid[position.x, position.y].name == this.name ? 1 : 0,
             },
             {
-                objGrid[position.x - 1, position.y] != null ? 1 : 0,
+                objGrid[position.x - 1, position.y] != null && objGrid[position.x, position.y].name == this.name ? 1 : 0,
                 0,
-                objGrid[position.x + 1, position.y] != null ? 1 : 0
+                objGrid[position.x + 1, position.y] != null && objGrid[position.x, position.y].name == this.name ? 1 : 0
             },
             {
-                objGrid[position.x - 1, position.y - 1] != null ? 1 : 0,
-                objGrid[position.x,     position.y - 1] != null ? 1 : 0,
-                objGrid[position.x + 1, position.y - 1] != null ? 1 : 0
+                objGrid[position.x - 1, position.y - 1] != null && objGrid[position.x, position.y].name == this.name ? 1 : 0,
+                objGrid[position.x,     position.y - 1] != null && objGrid[position.x, position.y].name == this.name ? 1 : 0,
+                objGrid[position.x + 1, position.y - 1] != null && objGrid[position.x, position.y].name == this.name ? 1 : 0
             }
         };
 

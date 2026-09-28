@@ -57,6 +57,19 @@ public class SaveData : MonoBehaviour
         }
     }
 
+    public string loadName(int slot)
+    {
+        List<string> lines = new List<string>(File.ReadAllLines(path));
+        int index = LookUp(Type.Name, slot);
+
+        if (lines[index + 1].Contains("Name:"))
+        {
+            string name = lines[index + 1].Replace("Name:", "");
+        }
+
+        return name;
+    }
+
     public List<ModuleData> loadData(Type t, int slot) 
     {
         List<string> lines = new List<string>(File.ReadAllLines(path));
@@ -64,11 +77,6 @@ public class SaveData : MonoBehaviour
 
         foreach (string line in lines)
         {
-            //if (t == Type.Name && lines[index + 1].Contains("Name:"))
-            //{
-            //    string name = lines[index + 1].Replace("Name:", "");
-            //    //buildManager.LoadName(name);
-            //}
             if (t == Type.Ship && lines[slotIndex + 2].Contains("Modules:"))
             {
                 string temp = lines[index + 2].Replace("Modules:", "");

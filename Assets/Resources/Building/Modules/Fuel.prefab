@@ -82,7 +82,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1564292224, guid: 765660cfc5559004fbceadccb5089b9d, type: 3}
+  m_Sprite: {fileID: 351094247, guid: 642e4e9aa7afd534aadcca158b0f8759, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -104,4 +104,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e401f1e28cc23b542ba9e808ab165b39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Merge
-  gridPosition: {x: 0, y: 0}

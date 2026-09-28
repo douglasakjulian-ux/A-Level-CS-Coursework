@@ -152,6 +152,8 @@ public class BuildManager : MonoBehaviour
             }
             prePos = pos;
         }
+
+        // ADD NAME SAVING HERE
     }
 
     public void Build(int x, int y, GameObject obj)
@@ -306,6 +308,13 @@ public class BuildManager : MonoBehaviour
 
     public void SaveContentsActive()
     {
+        int i = 0;
+        foreach (Transform child in saveUI.transform)
+        {
+            i++;
+            GameObject nameObj = child.Find("Name").gameObject;
+            nameObj.GetComponent<TextMesh>().text = saveData.loadName(i).ToString();
+        }
         saveUI.SetActive(!saveUI.activeSelf);
     }
 
