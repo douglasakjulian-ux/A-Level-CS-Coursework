@@ -2550,7 +2550,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50cc1973c7d5b414b8ad60bf2b1390ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  gridSize: 50
+  gridSize: 1000
   core: {fileID: 373645581199192664, guid: 0dca95e13e1d2524dbe5ec510950a176, type: 3}
   deleteUI: {fileID: 860032928}
   saveUI: {fileID: 628153328}
@@ -2743,7 +2743,7 @@ GameObject:
   - component: {fileID: 752831478}
   - component: {fileID: 752831477}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4121,8 +4121,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f3aa40b80f899f4bb27c237450fe0ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  scrollSensitivity: 0
-  moveSpeed: 0
+  scrollSensitivity: 0.05
+  moveSpeed: 2
 --- !u!1 &1085068838
 GameObject:
   m_ObjectHideFlags: 0
@@ -4410,7 +4410,7 @@ GameObject:
   - component: {fileID: 1125237994}
   - component: {fileID: 1125237993}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5038,7 +5038,7 @@ GameObject:
   - component: {fileID: 1308757375}
   - component: {fileID: 1308757374}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5538,7 +5538,7 @@ GameObject:
   - component: {fileID: 1378043668}
   - component: {fileID: 1378043667}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

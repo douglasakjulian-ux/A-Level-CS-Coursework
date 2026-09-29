@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using Unity.AppUI.UI;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class SaveData : MonoBehaviour
 {
@@ -23,7 +20,7 @@ public class SaveData : MonoBehaviour
     string path = "Assets/Resources/Building/BuildSaveData.txt";
     public void save(string data, Type t, int slot)
     {
-        int slotIndex = LookUp(t, slot);
+        int index = LookUp(t, slot);
         List<string> lines = new List<string>(File.ReadAllLines(path));
 
         if (t == Type.Name)
@@ -32,7 +29,7 @@ public class SaveData : MonoBehaviour
             {
                 string text = "Name:" + data;
 
-                lines[slotIndex + 1] = text;
+                lines[index + 1] = text;
 
                 foreach (string line in lines)
                 {
@@ -47,7 +44,7 @@ public class SaveData : MonoBehaviour
             {
                 string text = "Modules:" + data;
 
-                lines[slotIndex + 2] = text;
+                lines[index + 2] = text;
 
                 foreach (string line in lines)
                 {
@@ -61,10 +58,11 @@ public class SaveData : MonoBehaviour
     {
         List<string> lines = new List<string>(File.ReadAllLines(path));
         int index = LookUp(Type.Name, slot);
+        string name = "";
 
         if (lines[index + 1].Contains("Name:"))
         {
-            string name = lines[index + 1].Replace("Name:", "");
+            name = lines[index + 1].Replace("Name:", "");
         }
 
         return name;
@@ -77,7 +75,7 @@ public class SaveData : MonoBehaviour
 
         foreach (string line in lines)
         {
-            if (t == Type.Ship && lines[slotIndex + 2].Contains("Modules:"))
+            if (t == Type.Ship && lines[index + 2].Contains("Modules:"))
             {
                 string temp = lines[index + 2].Replace("Modules:", "");
                 string[] modules = temp.Split("|");

@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 using static UnityEngine.UI.Image;
 using System.Reflection;
+using TMPro;
 
 public class BuildManager : MonoBehaviour
 {
@@ -31,14 +32,15 @@ public class BuildManager : MonoBehaviour
     public GameObject saveUI;
     SaveData saveData;
     MergeManager mergeManager;
+    List<string> currentNames;
     
     Vector2 mousePos => Camera.main.ScreenToWorldPoint(inputActions.Player.MousePos.ReadValue<Vector2>());
     void Awake()
     {
         saveData = GetComponent<SaveData>();
         mergeManager = GetComponent<MergeManager>();
-        gridWidth = gridSize;
-        gridHeight = gridSize;
+        gridWidth = gridSize + 2;
+        gridHeight = gridSize + 2;
         originX = -(gridWidth * cellSizeX) / 2f;
         originY = -(gridHeight * cellSizeY) / 2f;
         grid = new bool[gridWidth, gridHeight];
@@ -50,12 +52,41 @@ public class BuildManager : MonoBehaviour
         {
             for (int y = 0; y < grid.GetLength(1); y++)
             {
-                grid[x, y] = false;
+                grid[x, y] = false; // Mark the inner cells as unoccupied
                 objGrid[x, y] = null;
             }
         }
+        placeBorder();
 
         Build(gridWidth / 2, gridHeight / 2, core);
+
+        currentNames = new List<string>();
+        foreach(Transform child in saveUI.transform)
+        {
+            GameObject nameObj = child.Find("Name").gameObject;
+            currentNames.Add(saveData.loadName(child.GetSiblingIndex() + 1).ToString());
+            nameObj.GetComponent<TMP_InputField>().text = saveData.loadName(child.GetSiblingIndex() + 1).ToString();
+        }
+    }
+
+    void placeBorder()
+    {
+        for (int x = 0; x < grid.GetLength(0); x++)
+        {
+            Build(x, 0, Resources.Load<GameObject>("Building/Modules/Hazard_Line"));
+            Build(x, gridHeight - 1, Resources.Load<GameObject>("Building/Modules/Hazard_Line"));
+            Debug.Log(Resources.Load<GameObject>("Building/Modules/Hazard_Line").name);
+            objGrid[x, 0] = null;
+            objGrid[x, gridHeight - 1] = null;
+        }
+        for (int y = 0; y < grid.GetLength(1); y++)
+        {
+            Build(0, y, Resources.Load<GameObject>("Building/Modules/Hazard_Line"));
+            Build(gridWidth - 1, y, Resources.Load<GameObject>("Building/Modules/Hazard_Line"));
+            Debug.Log(Resources.Load<GameObject>("Building/Modules/Hazard_Line").name);
+            objGrid[0, y] = null;
+            objGrid[gridWidth - 1, y] = null;
+        }
     }
 
     void Update()
@@ -144,7 +175,6 @@ public class BuildManager : MonoBehaviour
                 if (objGrid[cellX, cellY].TryGetComponent<Merge>(out Merge merge))
                 {
                     mergeManager.RemoveMerge(merge);
-                    mergeManager.UpdateMerges();
                 }
                 grid[cellX, cellY] = false;
                 Destroy(selected);
@@ -153,7 +183,18 @@ public class BuildManager : MonoBehaviour
             prePos = pos;
         }
 
-        // ADD NAME SAVING HERE
+        foreach (Transform child in saveUI.transform) // name saving
+        {
+            GameObject nameObj = child.Find("Name").gameObject;
+            TMP_InputField inputField = nameObj.GetComponent<TMP_InputField>();
+            int index = child.GetSiblingIndex();
+            if (inputField.text != currentNames[index])
+            {
+                Debug.Log("name changed");
+                currentNames[index] = inputField.text;
+                saveName(inputField.text, index + 1);
+            }
+        }
     }
 
     public void Build(int x, int y, GameObject obj)
@@ -262,7 +303,7 @@ public class BuildManager : MonoBehaviour
                 if (objGrid[x, y] != null)
                 {
                     if (objGrid[x, y].tag == "Core") { continue; }
-                    gridString += objGrid[x, y].name + "," + x.ToString() + "," + y.ToString() + "," + ((int)(objGrid[x, y].transform.eulerAngles.z) / 90).ToString() + "|";
+                    gridString += objGrid[x, y].name + "," + x.ToString() + "," + y.ToString() + "," + ((int)(objGrid[x, y].transform.eulerAngles.z) / 90f).ToString() + "|";
                 }
             }
         }
@@ -308,14 +349,19 @@ public class BuildManager : MonoBehaviour
 
     public void SaveContentsActive()
     {
-        int i = 0;
+        saveUI.SetActive(!saveUI.activeSelf);
+    }
+
+    void saveName(string name, int index)
+    {
         foreach (Transform child in saveUI.transform)
         {
-            i++;
-            GameObject nameObj = child.Find("Name").gameObject;
-            nameObj.GetComponent<TextMesh>().text = saveData.loadName(i).ToString();
+            if (index == child.GetSiblingIndex() + 1)
+            {
+                GameObject nameObj = child.Find("Name").gameObject;
+                saveData.save(nameObj.GetComponent<TMP_InputField>().text, SaveData.Type.Name, index);
+            }
         }
-        saveUI.SetActive(!saveUI.activeSelf);
     }
 
     int WorldToCellX(float x) { return Mathf.FloorToInt((x - originX) / cellSizeX); }

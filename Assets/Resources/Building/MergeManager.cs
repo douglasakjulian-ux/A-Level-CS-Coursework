@@ -131,6 +131,7 @@ public class MergeManager : MonoBehaviour
     public void RemoveMerge(Merge merge)
     {
         mergeObjects.RemoveAll(x => x.merge == merge);
+        UpdateMerges();
     }
 
     int GetRotation(int[,] connections, int[,] pattern)

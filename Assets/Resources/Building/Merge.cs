@@ -11,33 +11,25 @@ public class Merge : MonoBehaviour
         Fuel
     }
 
-    //public Vector2Int gridPosition;
-
-    //BuildManager buildManager;
-    void Awake()
-    {
-        //buildManager = GameObject.Find("BuildManager").GetComponent<BuildManager>();
-    }
-
     public int[,] CheckConnections(GameObject[,] objGrid, Vector2Int position)
     {
         int[,] connections = new int[3,3];
         connections = new int[,]
         {
             {
-                objGrid[position.x - 1, position.y + 1] != null && objGrid[position.x, position.y].name == this.name ? 1 : 0,
-                objGrid[position.x    , position.y + 1] != null && objGrid[position.x, position.y].name == this.name ? 1 : 0,
-                objGrid[position.x + 1, position.y + 1] != null && objGrid[position.x, position.y].name == this.name ? 1 : 0,
+                objGrid[position.x - 1, position.y + 1] != null && objGrid[position.x - 1, position.y + 1].name == this.name ? 1 : 0,
+                objGrid[position.x    , position.y + 1] != null && objGrid[position.x, position.y + 1].name == this.name ? 1 : 0,
+                objGrid[position.x + 1, position.y + 1] != null && objGrid[position.x + 1, position.y + 1].name == this.name ? 1 : 0,
             },
             {
-                objGrid[position.x - 1, position.y] != null && objGrid[position.x, position.y].name == this.name ? 1 : 0,
+                objGrid[position.x - 1, position.y] != null && objGrid[position.x - 1, position.y].name == this.name ? 1 : 0,
                 0,
-                objGrid[position.x + 1, position.y] != null && objGrid[position.x, position.y].name == this.name ? 1 : 0
+                objGrid[position.x + 1, position.y] != null && objGrid[position.x + 1, position.y].name == this.name ? 1 : 0
             },
             {
-                objGrid[position.x - 1, position.y - 1] != null && objGrid[position.x, position.y].name == this.name ? 1 : 0,
-                objGrid[position.x,     position.y - 1] != null && objGrid[position.x, position.y].name == this.name ? 1 : 0,
-                objGrid[position.x + 1, position.y - 1] != null && objGrid[position.x, position.y].name == this.name ? 1 : 0
+                objGrid[position.x - 1, position.y - 1] != null && objGrid[position.x - 1, position.y - 1].name == this.name ? 1 : 0,
+                objGrid[position.x,     position.y - 1] != null && objGrid[position.x, position.y - 1].name == this.name ? 1 : 0,
+                objGrid[position.x + 1, position.y - 1] != null && objGrid[position.x + 1, position.y - 1].name == this.name ? 1 : 0
             }
         };
 
